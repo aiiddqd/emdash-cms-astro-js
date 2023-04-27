@@ -30,7 +30,7 @@ jobs:
             server: ${{ secrets.DEPLOY_HOST }}
             port: ${{ secrets.SFTP_PORT }}
             local_path: './*'
-            remote_path: '/testpc/testpc-www/wp-content'
+            remote_path: '/testpc-www/wp-content'
             sftp_only: true
             password: ${{ secrets.DEPLOY_PASS }}
 
