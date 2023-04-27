@@ -28,7 +28,7 @@ jobs:
         with:
             username: ${{ secrets.DEPLOY_USERNAME }}
             server: ${{ secrets.DEPLOY_HOST }}
-            port: ${{ secrets.FTP_PORT }}
+            port: ${{ secrets.SFTP_PORT }}
             local_path: './*'
             remote_path: '/testpc/testpc-www/test'
             sftp_only: true
