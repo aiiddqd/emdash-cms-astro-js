@@ -1,0 +1,36 @@
+name: Deploy To Test
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: 
+      name: test
+      url: https://dev.pokercoachingwp.com/
+
+    steps:
+      - name: let's started! 🎉
+        run: | 
+          echo "name of branch is ${{ github.ref }} and repository is ${{ github.repository }}." 
+          echo "The repository has been cloned to the runner. 🖥️ The workflow is now ready to test your code on the runner."
+
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: List files in the repository
+        run: |
+          ls -la ${{ github.workspace }}
+          echo "This job's status is ${{ job.status }}."
+
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@5.2.1
+        with:
+          switches: -avzr --delete --files-from=.github/workflows/include-list
+          path: ./
+          remote_path: dev/public_html/test
+          remote_host: sftp.dev.pokercoachingwp.com
+          remote_user: pc_deploy_test
+          remote_password: ${{ secrets.DEPLOY_PASS }}
+
+      - run: echo "deployed to url https://dev.pokercoachingwp.com/"
