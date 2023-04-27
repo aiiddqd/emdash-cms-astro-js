@@ -32,7 +32,6 @@ jobs:
             local_path: './plugin1/*'
             remote_path: '/testpc-www/wp-content/plugins/plugin1/'
             sftp_only: true
-            delete_remote_files: true
             password: ${{ secrets.DEPLOY_PASS }}
 
       - name: plugin2
