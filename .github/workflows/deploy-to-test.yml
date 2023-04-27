@@ -30,7 +30,18 @@ jobs:
             server: ${{ secrets.DEPLOY_HOST }}
             port: ${{ secrets.SFTP_PORT }}
             local_path: './plugin1/*'
-            remote_path: '/testpc-www/wp-content/plugins/plugin1'
+            remote_path: '/testpc-www/wp-content/plugins/plugin1/'
+            sftp_only: true
+            password: ${{ secrets.DEPLOY_PASS }}
+
+      - name: plugin2
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+            username: ${{ secrets.DEPLOY_USERNAME }}
+            server: ${{ secrets.DEPLOY_HOST }}
+            port: ${{ secrets.SFTP_PORT }}
+            local_path: './plugin2/'
+            remote_path: '/testpc-www/wp-content/plugins/plugin2/'
             sftp_only: true
             password: ${{ secrets.DEPLOY_PASS }}
 
