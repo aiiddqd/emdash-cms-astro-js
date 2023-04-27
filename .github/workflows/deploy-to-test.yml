@@ -24,13 +24,14 @@ jobs:
           echo "This job's status is ${{ job.status }}."
 
       - name: rsync deployments
-        uses: burnett01/rsync-deployments@5.2.1
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          switches: -avzr --delete --files-from=.github/workflows/include-list
-          path: ./
-          remote_path: dev/public_html/test
-          remote_host: sftp.dev.pokercoachingwp.com
-          remote_user: pc_deploy_test
-          remote_password: ${{ secrets.DEPLOY_PASS }}
+            username: ${{ secrets.DEPLOY_USERNAME }}
+            server: ${{ secrets.DEPLOY_HOST }}
+            port: ${{ secrets.FTP_PORT }}
+            local_path: './*'
+            remote_path: '/testpc/testpc-www/test'
+            sftp_only: true
+            password: ${{ secrets.DEPLOY_PASS }}
 
       - run: echo "deployed to url https://dev.pokercoachingwp.com/"
