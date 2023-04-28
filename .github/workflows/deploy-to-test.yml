@@ -35,11 +35,11 @@ jobs:
             username: ${{ secrets.DEPLOY_USERNAME }}
             password: ${{ secrets.DEPLOY_PASS }}
 
-      - name: plugin1
+      - name: plugin3
         uses: sand4rt/ftp-deployer@v1.7
         with:
-            local_folder: plugin1
-            remote_folder: testpc-www/wp-content/plugins/plugin1
+            local_folder: plugin3
+            remote_folder: testpc-www/wp-content/plugins/plugin3
             sftp: true
             passive: true
             host: ${{ secrets.DEPLOY_HOST }}
