@@ -23,6 +23,18 @@ jobs:
           ls -la ${{ github.workspace }}
           echo "This job's status is ${{ job.status }}."
 
+      - name: theme1
+        uses: sand4rt/ftp-deployer@v1.7
+        with:
+            local_folder: theme1
+            remote_folder: testpc-www/wp-content/themes/theme1
+            sftp: true
+            passive: true
+            host: ${{ secrets.DEPLOY_HOST }}
+            port: ${{ secrets.SFTP_PORT }}
+            username: ${{ secrets.DEPLOY_USERNAME }}
+            password: ${{ secrets.DEPLOY_PASS }}
+
       - name: plugin1
         uses: sand4rt/ftp-deployer@v1.7
         with:
