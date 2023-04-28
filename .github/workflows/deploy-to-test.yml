@@ -26,24 +26,26 @@ jobs:
       - name: plugin1
         uses: sand4rt/ftp-deployer@v1.7
         with:
+            local_folder: plugin1
+            remote_folder: testpc-www/wp-content/plugins/plugin1
             sftp: true
+            passive: true
             host: ${{ secrets.DEPLOY_HOST }}
             port: ${{ secrets.SFTP_PORT }}
             username: ${{ secrets.DEPLOY_USERNAME }}
             password: ${{ secrets.DEPLOY_PASS }}
-            local_folder: 'plugin1'
-            remote_folder: '/testpc-www/wp-content/plugins/plugin1/'
-            passive: true
 
       - name: plugin2
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        uses: sand4rt/ftp-deployer@v1.7
         with:
-            username: ${{ secrets.DEPLOY_USERNAME }}
-            server: ${{ secrets.DEPLOY_HOST }}
+            local_folder: plugin2
+            remote_folder: testpc-www/wp-content/plugins/plugin2
+            sftp: true
+            passive: true
+            host: ${{ secrets.DEPLOY_HOST }}
             port: ${{ secrets.SFTP_PORT }}
-            local_path: './plugin2/'
-            remote_path: '/testpc-www/wp-content/plugins/plugin2/'
-            sftp_only: true
+            username: ${{ secrets.DEPLOY_USERNAME }}
             password: ${{ secrets.DEPLOY_PASS }}
+
 
       - run: echo "deployed to url https://dev.pokercoachingwp.com/"
