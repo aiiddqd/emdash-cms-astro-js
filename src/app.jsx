@@ -1,6 +1,4 @@
 import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import './app.css'
 import { Button, Avatar } from "flowbite-react";
 import Hero from "./includes/hero-test";
