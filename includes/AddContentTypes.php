@@ -2,9 +2,9 @@
 
 namespace ProcessFlows;
 
-AddPostTypeFlow::init();
+AddContentTypes::init();
 
-class AddPostTypeFlow
+class AddContentTypes
 {
 
     public static function init()
