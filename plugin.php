@@ -30,12 +30,11 @@ class Plugin
             require_once $file;
         }
 
-        // register_activation_hook(__FILE__, [self::class, 'plugin_activation']);
+        register_activation_hook(__FILE__, [self::class, 'plugin_activation']);
 
-        // register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
+        register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
 
         // add_action('init', [self::class, 'load_text_domain']);
-
 
     }
 
@@ -49,13 +48,13 @@ class Plugin
     }
 
     // Your plugin code goes here
-    function plugin_activation()
+    public static function plugin_activation()
     {
         // Code to run on activation
     }
 
 
-    function plugin_deactivation()
+    public static function plugin_deactivation()
     {
         // Code to run on deactivation
     }
