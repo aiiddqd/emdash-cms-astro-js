@@ -19,4 +19,11 @@ interface FlowInterface {
      * @return string
      */
     public static function getSlug() : string;
+    
+    /**
+     * Start actions for flow
+     * 
+     * @return bool
+     */
+    public static function starter() : bool;
 }

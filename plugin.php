@@ -30,12 +30,36 @@ class Plugin
             require_once $file;
         }
 
+        add_action('admin_init', function () {
+            if (! as_has_scheduled_action('processflow_recurring_starters')) {
+                as_schedule_recurring_action(
+                    time(),
+                    HOUR_IN_SECONDS, // every 24 hours
+                    'processflow_recurring_starters'
+                );
+            }
+        });
+
+        add_action('processflow_recurring_starters', [self::class, 'starters']);
+
         register_activation_hook(__FILE__, [self::class, 'plugin_activation']);
 
         register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
 
         // add_action('init', [self::class, 'load_text_domain']);
 
+    }
+
+    public static function starters()
+    {
+        // Code to run on recurring action for starters
+        $starters = apply_filters('processflow_starters', []);
+        foreach ($starters as $starter) {
+            if($starter instanceof FlowInterface){
+                //todo $starter::starter();
+            }
+            // $starter->run();
+        }
     }
 
     public static function load_text_domain()
