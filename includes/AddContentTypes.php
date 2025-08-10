@@ -11,8 +11,23 @@ class AddContentTypes
     {
         add_action('init', [self::class, 'register_post_type']);
         add_action('init', [self::class, 'register_taxonomy']);
+
+        add_filter( 'acf/settings/remove_wp_meta_box', [self::class, 're_enable_custom_fields_for_flow'] );
+
     }
 
+    public static function re_enable_custom_fields_for_flow($remove)
+    {
+        global $post_type;
+
+        // Only return false (re-enable metabox) for 'flow' post type
+        if ('flow' === $post_type) {
+            return false;
+        }
+
+        // Otherwise, keep ACF's default behavior (hide metabox)
+        return $remove;
+    }
 
     public static function register_post_type()
     {
@@ -39,7 +54,7 @@ class AddContentTypes
             'labels' => $labels,
             'public' => false,  // Set to false if you want it hidden from frontend
             'show_ui' => true,
-            'show_in_menu' => true,
+            // 'show_in_menu' => true,
             'query_var' => true,
             'rewrite' => ['slug' => 'flow'],
             'capability_type' => 'post',
@@ -47,7 +62,7 @@ class AddContentTypes
             'hierarchical' => true,  // Like pages, if flows can have parents
             'menu_position' => 20,    // Position in admin menu
             'menu_icon' => 'dashicons-controls-repeat',  // Custom icon
-            'supports' => ['title', 'thumbnail', 'excerpt', 'comments'],
+            'supports' => ['title', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'page-attributes'],
         ];
 
         register_post_type('flow', $args);
