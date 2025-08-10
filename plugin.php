@@ -7,6 +7,7 @@
  * Author URI:  https://github.com/aiiddqd/
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Requires Plugins:  woocommerce
  * Text Domain: process-flows
  * Version:     0.1.250808
  */
@@ -22,6 +23,10 @@ Plugin::init();
 
 class Plugin
 {
+
+    public static $slug = 'process-flows';
+    public static $flows = [];
+
     public static function init()
     {
         //load php files from subfolder includes
@@ -29,6 +34,15 @@ class Plugin
         foreach ($files as $file) {
             require_once $file;
         }
+
+        self::$flows = apply_filters('processflow_flows', []);
+        foreach (self::$flows as $flow) {
+            if ($flow instanceof FlowInterface) {
+                $flow::init();
+            }
+        }
+
+
 
         add_action('admin_init', function () {
             if (! as_has_scheduled_action('processflow_recurring_starters')) {
@@ -48,17 +62,65 @@ class Plugin
 
         // add_action('init', [self::class, 'load_text_domain']);
 
+        add_action('current_screen', [self::class, 'load_flows_to_collection']);
+
+    }
+
+
+    public static function load_flows_to_collection($screen)
+    {
+        global $pagenow;
+
+        if ($pagenow != 'edit.php') {
+            return;
+        }
+
+        $post_type = $screen->post_type ?? null;
+
+        if ($post_type != 'flow') {
+            return;
+        }
+
+        foreach(self::$flows as $flow) {
+            if ($flow instanceof FlowInterface) {
+                continue;
+            }
+
+            $slug = $flow::getSlug();
+
+            //check post with slug $slug
+            $post = get_page_by_path($slug, OBJECT, 'flow');
+
+            if (!$post) {
+                $post = wp_insert_post([
+                    'post_title' => $flow,
+                    'post_name' => $slug,
+                    'post_type' => 'flow',
+                    'post_status' => 'publish',
+                ]);
+            }
+        
+        }
+
+        //check if page is post type flow list
+
     }
 
     public static function starters()
     {
         // Code to run on recurring action for starters
-        $starters = apply_filters('processflow_starters', []);
-        foreach ($starters as $starter) {
-            if($starter instanceof FlowInterface){
-                //todo $starter::starter();
+        try {
+            foreach (self::$flows as $starter) {
+                if ($starter instanceof FlowInterface) {
+                    $starter::prepareActions();
+                }
+                // $starter->run();
             }
-            // $starter->run();
+        } catch (\Exception $e) {
+            wc_get_logger()->error($e->getMessage(), [
+                'flows' => self::$flows,
+                'source' => self::$slug,
+            ]);
         }
     }
 

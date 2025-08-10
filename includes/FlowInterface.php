@@ -25,5 +25,5 @@ interface FlowInterface {
      * 
      * @return bool
      */
-    public static function starter() : bool;
+    public static function prepareActions() : bool;
 }

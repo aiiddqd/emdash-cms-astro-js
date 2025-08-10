@@ -14,6 +14,31 @@ class AddContentTypes
 
         add_filter( 'acf/settings/remove_wp_meta_box', [self::class, 're_enable_custom_fields_for_flow'] );
 
+        add_action('add_meta_boxes', [self::class, 'add_meta_box']);
+
+        add_action('process_flows_meta_box_config', [self::class, 'show_slug']);
+
+    }
+
+    //show_slug
+    public static function show_slug($post_id)
+    {
+        echo '<p>' . __('Slug: ', 'process-flows') . get_post_field('post_name', $post_id) . '</p>';
+    }
+
+    //add meta box
+    public static function add_meta_box()
+    {
+        add_meta_box(
+            'flow_meta_box',
+            __('Flow Config', 'process-flows'),
+            function() {
+                do_action('process_flows_meta_box_config', get_the_ID());
+            },
+            'flow',
+            'normal',
+            'high'
+        );
     }
 
     public static function re_enable_custom_fields_for_flow($remove)
