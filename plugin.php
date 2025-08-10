@@ -81,7 +81,7 @@ class Plugin
             return;
         }
 
-        foreach(self::$flows as $flow) {
+        foreach (self::$flows as $flow) {
             if ($flow instanceof FlowInterface) {
                 continue;
             }
@@ -91,18 +91,22 @@ class Plugin
             //check post with slug $slug
             $post = get_page_by_path($slug, OBJECT, 'flow');
 
-            if (!$post) {
-                $post = wp_insert_post([
-                    'post_title' => $flow,
+            if (! $post) {
+                $post_id = wp_insert_post([
+                    'post_title' => $flow::getTitle(),
+                    'post_excerpt' => $flow::getDescription(),
                     'post_name' => $slug,
                     'post_type' => 'flow',
                     'post_status' => 'publish',
                 ]);
-            }
-        
-        }
 
-        //check if page is post type flow list
+                $post = get_post($post_id);
+            }
+
+            $flowData = ['class_name' => $flow];
+            update_post_meta($post->ID, 'flowData', json_encode($flowData));
+
+        }
 
     }
 

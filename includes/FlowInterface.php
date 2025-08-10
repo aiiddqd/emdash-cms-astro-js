@@ -21,6 +21,20 @@ interface FlowInterface {
     public static function getSlug() : string;
     
     /**
+     * Get flow title for save and view to admin
+     * 
+     * @return string
+     */
+    public static function getTitle() : string;
+    
+    /**
+     * Get flow description for save and view to admin
+     * 
+     * @return string
+     */
+    public static function getDescription() : string;
+    
+    /**
      * Start actions for flow
      * 
      * @return bool
