@@ -42,6 +42,12 @@ class Plugin
             }
         }
 
+        add_action('admin_init', function () {
+            if (isset($_GET['test_processflow_recurring_starters'])) {
+                do_action('processflow_recurring_starters');
+                exit;
+            }
+        });
 
 
         add_action('admin_init', function () {
@@ -49,7 +55,10 @@ class Plugin
                 as_schedule_recurring_action(
                     time(),
                     HOUR_IN_SECONDS, // every 24 hours
-                    'processflow_recurring_starters'
+                    'processflow_recurring_starters',
+                    [],
+                    self::$slug,
+                    true
                 );
             }
         });
@@ -60,13 +69,19 @@ class Plugin
 
         register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
 
-        // add_action('init', [self::class, 'load_text_domain']);
-
         add_action('current_screen', [self::class, 'load_flows_to_collection']);
+
+        // add_action('init', [self::class, 'load_text_domain']);
 
     }
 
 
+    /**
+     * Load flows to collection in console
+     *
+     * @param mixed $screen
+     * @return void
+     */
     public static function load_flows_to_collection($screen)
     {
         global $pagenow;
@@ -112,13 +127,9 @@ class Plugin
 
     public static function starters()
     {
-        // Code to run on recurring action for starters
         try {
             foreach (self::$flows as $starter) {
-                if ($starter instanceof FlowInterface) {
-                    $starter::prepareActions();
-                }
-                // $starter->run();
+                $starter::prepareActions();
             }
         } catch (\Exception $e) {
             wc_get_logger()->error($e->getMessage(), [

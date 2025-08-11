@@ -36,8 +36,6 @@ interface FlowInterface {
     
     /**
      * Start actions for flow
-     * 
-     * @return bool
      */
-    public static function prepareActions() : bool;
+    public static function prepareActions() : mixed;
 }
