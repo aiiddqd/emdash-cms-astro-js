@@ -37,7 +37,7 @@ class Plugin
 
         self::$flows = apply_filters('processflow_flows', []);
         foreach (self::$flows as $flow) {
-            if ($flow instanceof FlowInterface) {
+            if ($flow) {
                 $flow::init();
             }
         }
