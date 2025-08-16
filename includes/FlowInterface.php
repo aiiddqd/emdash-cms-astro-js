@@ -6,6 +6,11 @@ namespace ProcessFlows;
 
 interface FlowInterface {
 
+    //add propertie (not function and not const) for flow - slug, title, description
+    
+
+
+
     /**
      * Init flow and WP hooks
      * 
