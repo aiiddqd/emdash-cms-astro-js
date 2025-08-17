@@ -22,7 +22,7 @@ class StatusForFlow
         $flow_slug = get_post_field('post_name', $post_id);
         // get link to log woocommerce
     }
-    
+
     public static function getLatestStatusActions($post_id)
     {
         echo '<h3>'.__('Scheduled Actions', 'process-flows').'</h3>';
@@ -46,8 +46,14 @@ class StatusForFlow
         foreach ($actions as $action_id => $action) {
             $store = ActionScheduler_Store::instance();
             $action = $store->fetch_action($action_id);
-            $readable_date = $action->get_schedule()->get_date()->format('Y-m-d H:i:s');
             $status = $store->get_status($action_id);
+
+            /**
+             * @var \ActionScheduler_Abstract_Schedule $schedule
+             */
+            $schedule = $action->get_schedule();
+            $readable_date = $schedule->get_date()->format('Y-m-d H:i:s');
+
             ?>
             <li>
                 <details>
