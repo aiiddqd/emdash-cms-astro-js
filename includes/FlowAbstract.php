@@ -4,9 +4,14 @@ namespace ProcessFlows;
 
 abstract class FlowAbstract
 {
-    public static function scheduleAction($context = [])
+    public static function init()
     {
-        as_schedule_single_action(time(), static::getActionNameWithSlug(), [$context], Plugin::$slug, true);
+        add_action(static::getActionNameWithSlug(), [static::class, 'handleAction']);
+    }
+
+    public static function scheduleAction($payload = [])
+    {
+        as_schedule_single_action(time(), static::getActionNameWithSlug(), [$payload], Plugin::$slug, true);
     }
 
     abstract public static function getSlug(): string;
