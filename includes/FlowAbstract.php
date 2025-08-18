@@ -11,7 +11,7 @@ abstract class FlowAbstract
         add_action(static::getActionNameWithSlug(), [static::class, 'handleAction']);
     }
 
-    abstract public static function handleAction(array $payload): bool;
+    abstract public static function handleAction(array $payload);
 
     public static function scheduleAction($payload = [])
     {
