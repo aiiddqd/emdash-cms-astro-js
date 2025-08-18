@@ -27,4 +27,9 @@ abstract class FlowAbstract
     public static function getActionNameWithSlug(){
         return Plugin::$slug . '/' . static::getSlug();
     }
+
+    public static function log($message, $context = [])
+    {
+        wc_get_logger()->info($message, array_merge(['source' => static::getActionNameWithSlug()], $context));
+    }
 }
