@@ -32,4 +32,13 @@ abstract class FlowAbstract
     {
         wc_get_logger()->info($message, array_merge(['source' => static::getActionNameWithSlug()], $context));
     }
+    
+    public static function dd($data, $cli = true)
+    {
+        if ($cli && class_exists('WP_CLI')) {
+            \WP_CLI::line(print_r($data, true));
+        } else {
+            var_dump($data);
+        }
+    }
 }
