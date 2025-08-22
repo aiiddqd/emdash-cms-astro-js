@@ -1,0 +1,11 @@
+{
+    "core": null,
+    "port": 7777,
+    "themes": [
+        "blocksy",
+        "."
+    ],
+    "config": {
+        "WP_THEME": "app"
+    }
+}
