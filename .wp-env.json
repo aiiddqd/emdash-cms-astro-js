@@ -5,11 +5,16 @@
         "https://downloads.wordpress.org/theme/blocksy.2.0.0.zip",
         "."
     ],
+    "plugins": [
+        "https://downloads.wordpress.org/plugin/pwa.zip"
+    ],
     "multisite": true,
     "mappings": {
         "wp-content/themes/app": "."
     },
     "config": {
+        "WP_DEBUG_DISPLAY": true,
+        "WP_DEBUG": false,
         "WP_THEME": "app"
     }
 }
