@@ -36,6 +36,7 @@ class Plugin
         }
 
         self::$flows = apply_filters('processflow_flows', []);
+        dd(self::$flows);
         foreach (self::$flows as $flowClass) {
             $flow = new $flowClass();
             if (is_callable($flow)) {
