@@ -28,9 +28,26 @@ abstract class FlowAbstract
         return Plugin::$slug . '/' . static::getSlug();
     }
 
-    public static function log($message, $context = [])
+    public static function log($message, $flow_id = null, $context = [])
     {
-        wc_get_logger()->info($message, array_merge(['source' => static::getActionNameWithSlug()], $context));
+        if(empty($flow_id)){
+            wc_get_logger()->info($message, array_merge(['source' => static::getActionNameWithSlug()], $context));
+        } else {
+            //todo add log to comment if flow_id exists
+            $post = get_post($flow_id);
+            if($post){
+                $comment = [
+                    'comment_post_ID' => $post->ID,
+                    'comment_author' => 'Flow Logger',
+                    'comment_content' => $message,
+                    'comment_type' => 'flow_log',
+                    'comment_approved' => 1,
+                ];
+                wp_insert_comment($comment);
+            } else {
+                wc_get_logger()->info($message, array_merge(['source' => static::getActionNameWithSlug()], $context));
+            }
+        }
     }
     
     public static function dd($data, $cli = true)
