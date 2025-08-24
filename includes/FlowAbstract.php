@@ -8,7 +8,12 @@ abstract class FlowAbstract
 {
     protected static ?int $intervalInSeconds = null;
 
-    abstract public static function init();
+    //add abstract property
+    abstract public static string $slug;
+    abstract public static string $title;
+    abstract public static string $description;
+
+
 
     public function __invoke()
     {
@@ -16,6 +21,7 @@ abstract class FlowAbstract
         add_action('init', [static::class, 'starter']);
     }
 
+    abstract public static function init();
 
     abstract public static function starterHandle($payload = []);
 
@@ -100,6 +106,8 @@ abstract class FlowAbstract
 
     /**
      * Get the slug for the flow
+     * 
+     * todo - remove and replace to $slug
      */
     abstract public static function getSlug(): string;
 
