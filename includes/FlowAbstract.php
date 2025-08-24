@@ -30,8 +30,6 @@ abstract class FlowAbstract
             return;
         }
 
-        dd(1);
-
         if (! as_next_scheduled_action(static::getActionNameWithSlug())) {
             as_schedule_recurring_action(
                 time(),
