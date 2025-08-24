@@ -30,6 +30,8 @@ abstract class FlowAbstract
             return;
         }
 
+        dd(1);
+
         if (! as_next_scheduled_action(static::getActionNameWithSlug())) {
             as_schedule_recurring_action(
                 time(),
@@ -60,11 +62,11 @@ abstract class FlowAbstract
         return $response;
     }
 
-    public static function addWebhookForREST($callback, $bearerToken)
+    public static function addWebhookForREST($endpointKey, $callback, $bearerToken)
     {
         //example rest api url /wp-json/FlowProcess/Webhook
-        add_action('rest_api_init', function () use ($callback, $bearerToken) {
-            register_rest_route('FlowProcess', '/Webhook', [
+        add_action('rest_api_init', function () use ($endpointKey, $callback, $bearerToken) {
+            register_rest_route('FlowProcess', '/' . $endpointKey, [
                 'methods' => 'POST',
                 'callback' => function (WP_REST_Request $request) use ($callback, $bearerToken) {
                     //check $bearerToken
@@ -78,9 +80,9 @@ abstract class FlowAbstract
         });
     }
 
-    public static function getUrlWebhookForREST()
+    public static function getUrlWebhookForREST($endpointKey)
     {
-        return rest_url('FlowProcess/Webhook');
+        return rest_url('FlowProcess/' . $endpointKey);
     }
 
     public static function scheduleSingleAction($key, $payload = [])

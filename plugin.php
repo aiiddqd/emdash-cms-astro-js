@@ -35,14 +35,16 @@ class Plugin
             require_once $file;
         }
 
-        self::$flows = apply_filters('processflow_flows', []);
-        dd(self::$flows);
-        foreach (self::$flows as $flowClass) {
-            $flow = new $flowClass();
-            if (is_callable($flow)) {
-                $flow();
+        add_action('init', function () {
+            self::$flows = apply_filters('processflow_flows', []);
+            // dd(self::$flows);
+            foreach (self::$flows as $flowClass) {
+                $flow = new $flowClass();
+                if (is_callable($flow)) {
+                    $flow();
+                }
             }
-        }
+        }, 5);
 
         add_action('admin_init', function () {
             if (isset($_GET['test_processflow_recurring_starters'])) {

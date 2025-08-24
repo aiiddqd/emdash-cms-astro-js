@@ -10,10 +10,13 @@ class LoadFormChildTheme
 {
     public static function init()
     {
-        $files = glob(get_stylesheet_directory().'/flows/*.php');
-        foreach ($files as $file) {
-            require_once $file;
-        }
+        //we should load all flow files from the child theme after plugins loaded
+        add_action('plugins_loaded', function () {
+            $files = glob(get_stylesheet_directory().'/flows/*.php');
+            foreach ($files as $file) {
+                require_once $file;
+            }
+        });
 
         add_action('current_screen', [self::class, 'load_flows_to_collection']);
 
