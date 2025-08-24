@@ -46,29 +46,6 @@ class Plugin
             }
         }, 5);
 
-        add_action('admin_init', function () {
-            if (isset($_GET['test_processflow_recurring_starters'])) {
-                do_action('processflow_recurring_starters');
-                exit;
-            }
-        });
-
-
-        add_action('admin_init', function () {
-            if (! as_has_scheduled_action('processflow_recurring_starters')) {
-                as_schedule_recurring_action(
-                    time(),
-                    HOUR_IN_SECONDS, // every 24 hours
-                    'processflow_recurring_starters',
-                    [],
-                    self::$slug,
-                    true
-                );
-            }
-        });
-
-        add_action('processflow_recurring_starters', [self::class, 'starters']);
-
         register_activation_hook(__FILE__, [self::class, 'plugin_activation']);
 
         register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
@@ -79,20 +56,6 @@ class Plugin
     }
 
 
-
-    public static function starters()
-    {
-        try {
-            foreach (self::$flows as $starter) {
-                $starter::prepareActions();
-            }
-        } catch (\Exception $e) {
-            wc_get_logger()->error($e->getMessage(), [
-                'flows' => self::$flows,
-                'source' => self::$slug,
-            ]);
-        }
-    }
 
     public static function load_text_domain()
     {
