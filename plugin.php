@@ -25,6 +25,8 @@ class Plugin
 {
 
     public static $slug = 'process-flows';
+    public static $settings_slug = 'process-flows-settings';
+
     public static $flows = [];
 
     public static function init()
@@ -46,16 +48,50 @@ class Plugin
             }
         }, 5);
 
+        add_action('admin_menu', [self::class, 'add_settings_page'], 20);
+
+        add_filter('plugin_action_links_'.plugin_basename(__FILE__), function ($links) {
+            $settings_link = admin_url('edit.php?post_type=flow&page=process-flows');
+            $links[] = '<a href="'.esc_url($settings_link).'">'.__('Settings', 'process-flows').'</a>';
+            return $links;
+        });
+
         register_activation_hook(__FILE__, [self::class, 'plugin_activation']);
 
         register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
-
 
         // add_action('init', [self::class, 'load_text_domain']);
 
     }
 
 
+    // Settings Page for WordPress as sub page for /wp-admin/edit.php?post_type=flow
+    public static function add_settings_page()
+    {
+        add_submenu_page(
+            'edit.php?post_type=flow',
+            __('Settings', 'process-flows'),
+            __('Settings', 'process-flows'),
+            'manage_options',
+            'process-flows',
+            function () {
+
+                // Render the settings page content
+                ?>
+            <div class="wrap">
+                <h1><?php _e('Process Flows Settings', 'process-flows'); ?></h1>
+                <form method="post" action="options.php">
+                    <?php
+                        settings_fields(self::$settings_slug);
+                        do_settings_sections(self::$settings_slug);
+                        submit_button();
+                        ?>
+                </form>
+            </div>
+        <?php
+            }
+        );
+    }
 
     public static function load_text_domain()
     {

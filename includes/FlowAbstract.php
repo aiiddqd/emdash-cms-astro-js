@@ -22,7 +22,7 @@ abstract class FlowAbstract
      * Used for save to related post in the database.
      * Also used for actions, routing and webhook purposes.
      */
-    abstract public static string $slug;
+    public static string $slug;
 
 
     /**
@@ -31,7 +31,7 @@ abstract class FlowAbstract
      * This is used as a human-readable identifier for the flow.
      * Used for save to related post in the database.
      */
-    abstract public static string $title;
+    public static string $title;
 
 
     /**
@@ -40,7 +40,7 @@ abstract class FlowAbstract
      * This provides a brief overview of the flow's purpose and functionality.
      * Used for save to related post in the database.
      */
-    abstract public static string $description;
+    public static string $description;
 
 
 
