@@ -9,7 +9,7 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Requires Plugins:  woocommerce
  * Text Domain: process-flows
- * Version:     0.1.250808
+ * Version:     0.1.250824
  */
 
 namespace ProcessFlows;
@@ -48,7 +48,6 @@ class Plugin
             }
         }, 5);
 
-        add_action('admin_menu', [self::class, 'add_settings_page'], 20);
 
         add_filter('plugin_action_links_'.plugin_basename(__FILE__), function ($links) {
             $settings_link = admin_url('edit.php?post_type=flow&page=process-flows');
@@ -60,12 +59,28 @@ class Plugin
 
         register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
 
+        add_action('admin_menu', [self::class, 'add_settings_page'], 20);
+        add_action('admin_init', [self::class, 'add_config_option']);
         // add_action('init', [self::class, 'load_text_domain']);
 
     }
 
+    public static function add_config_option()
+    {
+        register_setting(Plugin::$settings_slug, 'process_flows');
+    }
 
-    // Settings Page for WordPress as sub page for /wp-admin/edit.php?post_type=flow
+    public static function getConfig($key = null)
+    {
+        $config = get_option('process_flows', []);
+        return $key ? ($config[$key] ?? null) : $config;
+    }
+
+    public static function getConfigFieldName($key = null)
+    {
+        return 'process_flows'.($key ? "[$key]" : '');
+    }
+
     public static function add_settings_page()
     {
         add_submenu_page(
