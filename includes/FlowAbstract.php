@@ -16,6 +16,9 @@ abstract class FlowAbstract
         add_action('init', [static::class, 'starter']);
     }
 
+
+    abstract public static function starterHandle($payload = []);
+
     /**
      * Starter contains recurring actions or another starter logic
      * 
@@ -39,7 +42,6 @@ abstract class FlowAbstract
         }
 
         add_action(static::getActionNameWithSlug(), [static::class, 'starterHandle']);
-
 
     }
 
