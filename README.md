@@ -5,14 +5,14 @@ Process Flows is a powerful WordPress plugin designed to streamline and automate
 
 ## Features
 
-Workflow Automation: Build and customize workflows to automate repetitive tasks, approvals, and notifications.
-AI Agents: Leverage intelligent AI agents to handle dynamic decision-making, content generation, and task prioritization.
-Flexible Process Management: Create multi-step processes with conditional logic, triggers, and actions.
-Seamless Integration: Works with popular WordPress plugins and external tools via APIs.
-User-Friendly Interface: Intuitive drag-and-drop builder for designing workflows without coding.
-Real-Time Monitoring: Track workflow progress and performance with detailed analytics and logs.
-Customizable Notifications: Set up email, in-app, or external notifications for process updates.
-Scalable Architecture: Suitable for small businesses to enterprise-level operations.
+- Workflow Automation: Build and customize workflows to automate repetitive tasks, approvals, and notifications.
+- AI Agents: Leverage intelligent AI agents to handle dynamic decision-making, content generation, and task prioritization.
+- Flexible Process Management: Create multi-step processes with conditional logic, triggers, and actions.
+- Seamless Integration: Works with popular WordPress plugins and external tools via APIs.
+- User-Friendly Interface: Intuitive drag-and-drop builder for designing workflows without coding.
+- Real-Time Monitoring: Track workflow progress and performance with detailed analytics and logs.
+- Customizable Notifications: Set up email, in-app, or external notifications for process updates.
+- Scalable Architecture: Suitable for small businesses to enterprise-level operations.
 
 # Installation
 
