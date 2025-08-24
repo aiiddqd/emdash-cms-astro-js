@@ -1,5 +1,7 @@
 # Process Flows WordPress Plugin
 
+**Code driven configuration and visual control in WP console.**
+
 ## Overview
 Process Flows is a powerful WordPress plugin designed to streamline and automate business processes, workflows, and tasks within your WordPress site. By integrating advanced automation features and AI-driven agents, it empowers users to create, manage, and optimize complex workflows with ease.
 
