@@ -7,6 +7,7 @@
  * Author URI:  https://github.com/aiiddqd/
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Requires Plugins:  woocommerce
  * Text Domain: process-flows
  * Version:     0.1.250808
  */
@@ -22,6 +23,12 @@ Plugin::init();
 
 class Plugin
 {
+
+    public static $slug = 'process-flows';
+    public static $settings_slug = 'process-flows-settings';
+
+    public static $flows = [];
+
     public static function init()
     {
         //load php files from subfolder includes
@@ -30,13 +37,60 @@ class Plugin
             require_once $file;
         }
 
-        // register_activation_hook(__FILE__, [self::class, 'plugin_activation']);
+        add_action('init', function () {
+            self::$flows = apply_filters('processflow_flows', []);
+            // dd(self::$flows);
+            foreach (self::$flows as $flowClass) {
+                $flow = new $flowClass();
+                if (is_callable($flow)) {
+                    $flow();
+                }
+            }
+        }, 5);
 
-        // register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
+        add_action('admin_menu', [self::class, 'add_settings_page'], 20);
+
+        add_filter('plugin_action_links_'.plugin_basename(__FILE__), function ($links) {
+            $settings_link = admin_url('edit.php?post_type=flow&page=process-flows');
+            $links[] = '<a href="'.esc_url($settings_link).'">'.__('Settings', 'process-flows').'</a>';
+            return $links;
+        });
+
+        register_activation_hook(__FILE__, [self::class, 'plugin_activation']);
+
+        register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
 
         // add_action('init', [self::class, 'load_text_domain']);
 
+    }
 
+
+    // Settings Page for WordPress as sub page for /wp-admin/edit.php?post_type=flow
+    public static function add_settings_page()
+    {
+        add_submenu_page(
+            'edit.php?post_type=flow',
+            __('Settings', 'process-flows'),
+            __('Settings', 'process-flows'),
+            'manage_options',
+            'process-flows',
+            function () {
+
+                // Render the settings page content
+                ?>
+            <div class="wrap">
+                <h1><?php _e('Process Flows Settings', 'process-flows'); ?></h1>
+                <form method="post" action="options.php">
+                    <?php
+                        settings_fields(self::$settings_slug);
+                        do_settings_sections(self::$settings_slug);
+                        submit_button();
+                        ?>
+                </form>
+            </div>
+        <?php
+            }
+        );
     }
 
     public static function load_text_domain()
@@ -49,13 +103,13 @@ class Plugin
     }
 
     // Your plugin code goes here
-    function plugin_activation()
+    public static function plugin_activation()
     {
         // Code to run on activation
     }
 
 
-    function plugin_deactivation()
+    public static function plugin_deactivation()
     {
         // Code to run on deactivation
     }
