@@ -59,6 +59,7 @@ abstract class FlowAbstract
 
         return $response;
     }
+
     public static function addWebhookForREST($callback, $bearerToken)
     {
         //example rest api url /wp-json/FlowProcess/Webhook
@@ -70,13 +71,12 @@ abstract class FlowAbstract
                     if ($request->get_header('Authorization') !== 'Bearer ' . $bearerToken) {
                         return new WP_Error('rest_forbidden', __('You do not have permission to access this resource.'), ['status' => 403]);
                     }
-                    $callback($request);
+                    $callback($request, $bearerToken);
                 },
                 'permission_callback' => '__return_true',
             ]);
         });
     }
-
 
     public static function getUrlWebhookForREST()
     {
