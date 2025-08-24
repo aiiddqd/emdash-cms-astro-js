@@ -6,11 +6,40 @@ use WP_REST_Request, WP_Error;
 
 abstract class FlowAbstract
 {
+    /**
+     * Interval in seconds for the flow
+     * 
+     * Used for scheduling and timing purposes.
+     * You have to set this value to enable scheduling.
+     */
     protected static ?int $intervalInSeconds = null;
 
-    //add abstract property
+
+    /**
+     * The slug for the flow
+     * 
+     * This is used to uniquely identify the flow within the system.
+     * Used for save to related post in the database.
+     * Also used for actions, routing and webhook purposes.
+     */
     abstract public static string $slug;
+
+
+    /**
+     * The title for the flow
+     * 
+     * This is used as a human-readable identifier for the flow.
+     * Used for save to related post in the database.
+     */
     abstract public static string $title;
+
+
+    /**
+     * The description for the flow
+     * 
+     * This provides a brief overview of the flow's purpose and functionality.
+     * Used for save to related post in the database.
+     */
     abstract public static string $description;
 
 
@@ -52,7 +81,8 @@ abstract class FlowAbstract
     }
 
 
-    public static function requestWebhook($webhook, $payload, $headers = []){
+    public static function requestWebhook($webhook, $payload, $headers = [])
+    {
         $response = wp_remote_post($webhook, [
             'method' => 'POST',
             'body' => json_encode($payload),
@@ -68,11 +98,11 @@ abstract class FlowAbstract
     {
         //example rest api url /wp-json/FlowProcess/Webhook
         add_action('rest_api_init', function () use ($endpointKey, $callback, $bearerToken) {
-            register_rest_route('FlowProcess', '/' . $endpointKey, [
+            register_rest_route('FlowProcess', '/'.$endpointKey, [
                 'methods' => 'POST',
                 'callback' => function (WP_REST_Request $request) use ($callback, $bearerToken) {
                     //check $bearerToken
-                    if ($request->get_header('Authorization') !== 'Bearer ' . $bearerToken) {
+                    if ($request->get_header('Authorization') !== 'Bearer '.$bearerToken) {
                         return new WP_Error('rest_forbidden', __('You do not have permission to access this resource.'), ['status' => 403]);
                     }
                     $callback($request, $bearerToken);
@@ -84,7 +114,7 @@ abstract class FlowAbstract
 
     public static function getUrlWebhookForREST($endpointKey)
     {
-        return rest_url('FlowProcess/' . $endpointKey);
+        return rest_url('FlowProcess/'.$endpointKey);
     }
 
     public static function scheduleSingleAction($key, $payload = [])
@@ -104,22 +134,14 @@ abstract class FlowAbstract
         as_schedule_single_action(time(), static::getActionNameWithSlug(), [$payload], Plugin::$slug, true);
     }
 
-    /**
-     * Get the slug for the flow
-     * 
-     * todo - remove and replace to $slug
-     */
-    abstract public static function getSlug(): string;
-
-
     //used in includes/StatusForFlow.php#L26
     public static function getActionNameWithSlug($key = '')
     {
         if (empty($key)) {
-            return Plugin::$slug.'/'.static::getSlug();
+            return Plugin::$slug.'/'.static::$slug;
         }
 
-        return Plugin::$slug.'/'.static::getSlug().'/'.$key;
+        return Plugin::$slug.'/'.static::$slug.'/'.$key;
     }
 
     public static function log($message, $parent_flow_log_id = null, $context = []): int
@@ -146,7 +168,7 @@ abstract class FlowAbstract
 
     private static function getRelatedFlowId()
     {
-        $slug = static::getSlug();
+        $slug = static::$slug;
         $post = get_page_by_path($slug, OBJECT, 'flow');
         if ($post) {
             return $post->ID;
