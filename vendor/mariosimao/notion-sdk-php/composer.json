@@ -1,0 +1,70 @@
+{
+    "name": "mariosimao/notion-sdk-php",
+    "description": "A complete Notion SDK for PHP developers.",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://mariosimao.github.io/notion-sdk-php",
+    "autoload": {
+        "psr-4": {
+            "Notion\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Notion\\Test\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mario Simão",
+            "email": "mariogsimao@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "psr/http-client-implementation": "^1.0",
+        "psr/http-message-implementation": "^1.0",
+        "psr/http-factory-implementation": "^1.0",
+        "php-http/discovery": "^1.15"
+    },
+    "require-dev": {
+        "brianium/paratest": "^7.1",
+        "guzzlehttp/guzzle": "^7.5",
+        "infection/infection": "^0.26.19 || ^0.27.0",
+        "phpunit/phpunit": "^10.0",
+        "psalm/plugin-phpunit": "^0.18.4",
+        "squizlabs/php_codesniffer": "^3.7",
+        "vimeo/psalm": "^5.7"
+    },
+    "scripts": {
+        "ci:phpcs": "phpcs -q --report=checkstyle | cs2pr",
+        "ci:psalm": "psalm --output-format=github --shepherd --stats",
+        "ci:coverage": [
+            "Composer\\Config::disableProcessTimeout",
+            "paratest --coverage-clover dist/phpunit/clover.xml"
+        ],
+        "ci:unit": "paratest --testsuite Unit",
+        "ci:integration": "paratest --testsuite Integration",
+        "ci:mutation": [
+            "Composer\\Config::disableProcessTimeout",
+            "infection --threads=max"
+        ],
+        "test": [
+            "@test:phpcs",
+            "@test:psalm",
+            "@test:unit"
+        ],
+        "test:phpcs": "phpcs",
+        "test:psalm": "psalm --no-cache",
+        "test:unit": "phpunit --testsuite Unit",
+        "test:integration": "paratest --testsuite Integration",
+        "test:coverage": "paratest --coverage-html dist/phpunit/html && echo \"Open the result on your browser: $PWD/dist/phpunit/html/index.html\""
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true,
+            "php-http/discovery": true
+        },
+        "sort-packages": true
+    }
+}

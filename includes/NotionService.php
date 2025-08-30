@@ -2,6 +2,14 @@
 
 namespace ProcessFlows;
 
+use Notion\Databases\Properties\StatusOption;
+use Notion\Notion;
+use Notion\Databases\Query;
+use Notion\Databases\Query\CompoundFilter;
+use Notion\Databases\Query\DateFilter;
+use Notion\Databases\Query\Sort;
+use Notion\Databases\Query\StatusFilter;
+
 NotionService::init();
 class NotionService
 {
