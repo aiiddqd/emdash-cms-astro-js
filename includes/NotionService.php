@@ -2,8 +2,6 @@
 
 namespace ProcessFlows;
 
-use Notion\Databases\Properties\StatusOption;
-use Notion\Databases\Properties\Status;
 
 use Notion\Notion;
 use Notion\Databases\Query;
@@ -11,8 +9,12 @@ use Notion\Databases\Query\CompoundFilter;
 use Notion\Databases\Query\DateFilter;
 use Notion\Databases\Query\Sort;
 use Notion\Databases\Query\StatusFilter;
+use Notion\Databases\Properties\StatusOption;
+use Notion\Databases\Properties\Status;
 use Notion\Comments\Comment;
 use Notion\Common\RichText;
+use Notion\Pages\Page;
+
 
 NotionService::init();
 class NotionService
@@ -43,6 +45,31 @@ class NotionService
         self::$notion = Notion::create(self::$token);
     }
 
+    //get page by id
+    public static function getPageById($pageId): Page|null
+    {
+        return self::$notion->pages()->find($pageId);
+    }
+
+    /**
+     * Get the first page from a database by status.
+     */
+    public static function getFirstPageByStatusFromDatabase($databaseId, $status): Page|null
+    {
+        $database = self::$notion->databases()->find($databaseId);
+        $query = Query::create()
+            ->changeFilter(
+                CompoundFilter::and(
+                    StatusFilter::property("Status")->equals($status)
+                )
+            )
+            ->addSort(Sort::property("Status"))
+            ->changePageSize(1);
+        $result = self::$notion->databases()->query($database, $query);
+
+        return $result->pages[0] ?? null;
+    }
+
     public static function addCommentToPage($pageId, $comment)
     {
         // Create the comment content as rich text
@@ -55,7 +82,7 @@ class NotionService
         return self::$notion->comments()->create($comment);
     }
 
-    public static function changeNotionPageStatus($pageId, $newStatus)
+    public static function changeNotionPageStatus($pageId, $newStatus, $statusField = 'Status')
     {
         $page = self::$notion->pages()->find($pageId);
         if (! $page) {
@@ -66,13 +93,18 @@ class NotionService
          * @var Status $status
          */
         $status = $page->getProperty('Status');
-        if ($status) {
-            $page = $page->addProperty("Status", $status->changeOption(StatusOption::fromName($newStatus)));
-            self::$notion->pages()->update($page);
-            return true;
-        } else {
-            return false;
-        }
+        // var_dump($newStatus);
+        // var_dump($status);
+        $page = $page->addProperty('Status', $status->changeOption(StatusOption::fromName($newStatus)));
+        return self::$notion->pages()->update($page);
+        // var_dump(1);
+        // var_dump($page);
+        // return true;
+
+        // if ($status) {
+        // } else {
+        //     return false;
+        // }
     }
 
     public static function add_settings()
