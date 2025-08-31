@@ -144,7 +144,7 @@ abstract class FlowAbstract
         return Plugin::$slug.'/'.static::$slug.'/'.$key;
     }
 
-    public static function log($message, $parent_flow_log_id = null, $context = []): int
+    public static function log($message, $context = [], $parent_flow_log_id = null): int
     {
         $flow_id = self::getRelatedFlowId();
         if (empty($flow_id)) {

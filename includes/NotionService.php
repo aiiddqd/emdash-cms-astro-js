@@ -14,6 +14,7 @@ use Notion\Pages\Properties\Status;
 use Notion\Comments\Comment;
 use Notion\Common\RichText;
 use Notion\Pages\Page;
+use Notion\Configuration;
 
 
 NotionService::init();
@@ -43,6 +44,11 @@ class NotionService
         }
 
         self::$notion = Notion::create(self::$token);
+
+        // $config = Configuration::create(self::$token)
+            // ->enableRetryOnConflict(2);
+
+        // $notion = Notion::createFromConfig($config);
     }
 
     //get page by id
