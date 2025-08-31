@@ -29,8 +29,6 @@ class NotionService
 
     public static function init()
     {
-        // add settings to Notion API integration Plugin::$settings_slug
-
         add_action('admin_init', [self::class, 'add_settings']);
     }
 
@@ -55,7 +53,12 @@ class NotionService
         // $notion = Notion::createFromConfig($config);
     }
 
-    //get page by id
+    /**
+     * Retrieve a Notion page by its ID.
+     * 
+     * @param string $pageId
+     * @return Page|null
+     */
     public static function getPageById($pageId): Page|null
     {
         return self::$notion->pages()->find($pageId);
