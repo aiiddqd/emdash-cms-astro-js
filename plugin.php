@@ -9,7 +9,7 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Requires Plugins:  woocommerce
  * Text Domain: process-flows
- * Version:     0.1.250824
+ * Version:     0.2.250831
  */
 
 namespace ProcessFlows;
@@ -23,7 +23,6 @@ Plugin::init();
 
 class Plugin
 {
-
     public static $slug = 'process-flows';
     public static $settings_slug = 'process-flows-settings';
 
