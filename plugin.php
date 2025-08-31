@@ -31,14 +31,14 @@ class Plugin
 
     public static function init()
     {
+        //add vendor/autoload.php
+        require_once plugin_dir_path(__FILE__).'vendor/autoload.php';
+
         //load php files from subfolder includes
         $files = glob(plugin_dir_path(__FILE__).'includes/*.php');
         foreach ($files as $file) {
             require_once $file;
         }
-
-        //add vendor/autoload.php
-        require_once plugin_dir_path(__FILE__).'vendor/autoload.php';
 
         add_action('init', function () {
             self::$flows = apply_filters('processflow_flows', []);

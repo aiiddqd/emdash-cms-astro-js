@@ -118,7 +118,5 @@ class NotionService
             Plugin::$settings_slug,
             'notion_integration'
         );
-
-        register_setting(Plugin::$settings_slug, 'notion_api_key');
     }
 }
