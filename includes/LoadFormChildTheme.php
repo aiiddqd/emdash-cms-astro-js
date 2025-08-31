@@ -48,16 +48,16 @@ class LoadFormChildTheme
                 continue;
             }
 
-            $slug = $flow::getSlug();
+            // $slug = $flow::$slug;
 
             //check post with slug $slug
-            $post = get_page_by_path($slug, OBJECT, 'flow');
+            $post = get_page_by_path($flow::$slug, OBJECT, 'flow');
 
             if (! $post) {
                 $post_id = wp_insert_post([
-                    'post_title' => $flow::getTitle(),
-                    'post_excerpt' => $flow::getDescription(),
-                    'post_name' => $slug,
+                    'post_title' => $flow::$title,
+                    'post_excerpt' => $flow::$description,
+                    'post_name' => $flow::$slug,
                     'post_type' => 'flow',
                     'post_status' => 'publish',
                 ]);

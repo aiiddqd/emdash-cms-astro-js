@@ -2,6 +2,8 @@
 
 **Code driven configuration and visual control in WP console.**
 
+official website https://github.com/aiiddqd/process-flows
+
 ## Overview
 Process Flows is a powerful WordPress plugin designed to streamline and automate business processes, workflows, and tasks within your WordPress site. By integrating advanced automation features and AI-driven agents, it empowers users to create, manage, and optimize complex workflows with ease.
 
@@ -18,10 +20,23 @@ Process Flows is a powerful WordPress plugin designed to streamline and automate
 
 # Installation
 
-Download the Process Flows plugin from the WordPress Plugin Repository or upload the plugin zip file.
-Navigate to Plugins > Add New in your WordPress admin dashboard.
-Upload and activate the plugin.
-Configure the plugin settings from the Process Flows menu in the admin panel.
+## WP CLI
+
+To install the Process Flows plugin using WP CLI, run:
+
+```bash
+wp plugin install https://github.com/aiiddqd/process-flows/archive/main.zip --activate
+```
+
+This command downloads and activates the plugin directly from the GitHub repository.
+
+
+
+## from web console
+- Download the Process Flows plugin from the WordPress Plugin Repository or upload the plugin zip file.
+- Navigate to Plugins > Add New in your WordPress admin dashboard.
+- Upload and activate the plugin.
+- Configure the plugin settings from the Process Flows menu in the admin panel.
 
 # Usage
 

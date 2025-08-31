@@ -12,18 +12,39 @@ class AddContentTypes
         add_action('init', [self::class, 'register_post_type']);
         add_action('init', [self::class, 'register_taxonomy']);
 
-        add_filter( 'acf/settings/remove_wp_meta_box', [self::class, 're_enable_custom_fields_for_flow'] );
+        add_filter('acf/settings/remove_wp_meta_box', [self::class, 're_enable_custom_fields_for_flow']);
 
         add_action('add_meta_boxes', [self::class, 'add_meta_box']);
 
         add_action('process_flows_meta_box_config', [self::class, 'show_slug']);
 
+        add_filter('get_comment_author', [self::class, 'append_comment_date_to_author'], 10, 3);
+
     }
 
-    //show_slug
+
+    /**
+     * Append the comment date to the author name for flow_log comments
+     */
+    public static function append_comment_date_to_author($author, $comment_ID, $comment)
+    {
+        if ($comment->comment_type !== 'flow_log') {
+            return $author;
+        }
+
+        // Check if we're in the comments meta box AJAX call
+        if (doing_action('wp_ajax_get-comments')) {
+            $comment_date = get_comment_date('Y-m-d', $comment_ID);
+            $comment_time = get_comment_time('H:i:s');
+            $author = esc_html($comment_date).' at '.esc_html($comment_time);
+        }
+
+        return $author;
+    }
+
     public static function show_slug($post_id)
     {
-        echo '<p>' . __('Slug: ', 'process-flows') . get_post_field('post_name', $post_id) . '</p>';
+        echo '<p>'.__('Slug: ', 'process-flows').get_post_field('post_name', $post_id).'</p>';
     }
 
     //add meta box
@@ -32,7 +53,7 @@ class AddContentTypes
         add_meta_box(
             'flow_meta_box',
             __('Flow Config', 'process-flows'),
-            function() {
+            function () {
                 do_action('process_flows_meta_box_config', get_the_ID());
             },
             'flow',
