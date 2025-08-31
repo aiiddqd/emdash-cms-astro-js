@@ -2,7 +2,6 @@
 
 namespace ProcessFlows;
 
-
 use Notion\Notion;
 use Notion\Databases\Query;
 use Notion\Databases\Query\CompoundFilter;
@@ -16,8 +15,13 @@ use Notion\Common\RichText;
 use Notion\Pages\Page;
 use Notion\Configuration;
 
-
 NotionService::init();
+
+/**
+ * Notion API integration service
+ * 
+ * @link https://mariosimao.github.io/notion-sdk-php/getting-started.html
+ */
 class NotionService
 {
     public static string $token = '';
@@ -69,7 +73,7 @@ class NotionService
                     StatusFilter::property("Status")->equals($status)
                 )
             )
-            ->addSort(Sort::property("Status"))
+            // ->addSort(Sort::property("Status"))
             ->changePageSize(1);
         $result = self::$notion->databases()->query($database, $query);
 
