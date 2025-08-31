@@ -58,6 +58,12 @@ Assign tasks such as content generation, data analysis, or decision-making to AI
 View real-time analytics to track workflow performance.
 Adjust workflows based on insights to improve efficiency.
 
+# Alternative to
+- AutomatorWP
+- Gravity Flow
+- Uncanny Automator
+- WP Webhooks
+- WP Fusion
 
 
 # Requirements
