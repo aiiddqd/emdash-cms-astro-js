@@ -10,7 +10,7 @@ use Notion\Databases\Query\DateFilter;
 use Notion\Databases\Query\Sort;
 use Notion\Databases\Query\StatusFilter;
 use Notion\Databases\Properties\StatusOption;
-use Notion\Databases\Properties\Status;
+use Notion\Pages\Properties\Status;
 use Notion\Comments\Comment;
 use Notion\Common\RichText;
 use Notion\Pages\Page;
@@ -93,18 +93,8 @@ class NotionService
          * @var Status $status
          */
         $status = $page->getProperty('Status');
-        // var_dump($newStatus);
-        // var_dump($status);
         $page = $page->addProperty('Status', $status->changeOption(StatusOption::fromName($newStatus)));
         return self::$notion->pages()->update($page);
-        // var_dump(1);
-        // var_dump($page);
-        // return true;
-
-        // if ($status) {
-        // } else {
-        //     return false;
-        // }
     }
 
     public static function add_settings()
