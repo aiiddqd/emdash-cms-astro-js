@@ -2,7 +2,7 @@
 
 namespace ProcessFlows;
 
-use WP_REST_Request, WP_Error;
+use WP_REST_Request, WP_Error, WP_CLI;
 
 abstract class FlowAbstract
 {
@@ -48,6 +48,32 @@ abstract class FlowAbstract
     {
         static::init();
         add_action('init', [static::class, 'starter']);
+
+        // if (class_exists('WP_CLI')) {
+        //     WP_CLI::add_command('pftdd', [static::class, 'testDrivenDevelopment']);
+        // }
+
+    }
+
+    public static function testDrivenDevelopment($args)
+    {
+
+        try {
+            $method = $args[0];
+            self::dd($method);
+            self::dd(static::class);
+            // static::starterHandle();
+            if (method_exists(static::class, $method)) {
+                $data = static::$method();
+                if ($data) {
+                    WP_CLI::log(print_r($data, true));
+                }
+                WP_CLI::success('test ended');
+            }
+        } catch (Exception $e) {
+            WP_CLI::error($e->getMessage());
+            WP_CLI::error($e->getTraceAsString());
+        }
     }
 
     abstract public static function init();
