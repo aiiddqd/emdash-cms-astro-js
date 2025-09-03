@@ -1,6 +1,6 @@
 <?php
 
-namespace ProcessFlows;
+namespace ProcessFlows\Services;
 
 use Notion\Notion;
 use Notion\Databases\Query;
@@ -15,7 +15,7 @@ use Notion\Common\RichText;
 use Notion\Pages\Page;
 use Notion\Configuration;
 
-NotionService::init();
+// NotionService::init();
 
 /**
  * Notion API integration service
