@@ -2,6 +2,7 @@
 
 namespace ProcessFlows\Services;
 
+use ProcessFlows;
 use Notion\Notion;
 use Notion\Databases\Query;
 use Notion\Databases\Query\CompoundFilter;
@@ -15,7 +16,7 @@ use Notion\Common\RichText;
 use Notion\Pages\Page;
 use Notion\Configuration;
 
-// NotionService::init();
+NotionService::init();
 
 /**
  * Notion API integration service
@@ -37,7 +38,7 @@ class NotionService
         if ($token) {
             self::$token = $token;
         } else {
-            self::$token = Plugin::getConfig('notion_api_key');
+            self::$token = ProcessFlows\Plugin::getConfig('notion_api_key');
         }
 
         // if empty self::$token
@@ -118,17 +119,17 @@ class NotionService
             function () {
                 echo '<p>'.__('Configure Notion API integration settings.', 'process-flows').'</p>';
             },
-            Plugin::$settings_slug
+            ProcessFlows\Plugin::$settings_slug
         );
 
         add_settings_field(
             'notion_api_key',
             __('Notion API Key', 'process-flows'),
             function () {
-                $value = Plugin::getConfig('notion_api_key');
-                echo '<input type="text" name="'.Plugin::getConfigFieldName('notion_api_key').'" value="'.esc_attr($value).'" />';
+                $value = ProcessFlows\Plugin::getConfig('notion_api_key');
+                echo '<input type="text" name="'.ProcessFlows\Plugin::getConfigFieldName('notion_api_key').'" value="'.esc_attr($value).'" />';
             },
-            Plugin::$settings_slug,
+            ProcessFlows\Plugin::$settings_slug,
             'notion_integration'
         );
     }

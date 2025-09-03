@@ -9,7 +9,7 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Requires Plugins:  woocommerce
  * Text Domain: process-flows
- * Version:     0.2.250831
+ * Version:     0.2.250903
  */
 
 namespace ProcessFlows;
@@ -34,8 +34,14 @@ class Plugin
         require_once plugin_dir_path(__FILE__).'vendor/autoload.php';
 
         //load php files from subfolder includes
-        $files = glob(plugin_dir_path(__FILE__).'includes/*.php');
-        foreach ($files as $file) {
+        $includes = glob(plugin_dir_path(__FILE__).'includes/*.php');
+        foreach ($includes as $file) {
+            require_once $file;
+        }
+
+        $services = glob(plugin_dir_path(__FILE__).'includes/Services/*.php');
+        // var_dump($services); exit;
+        foreach ($services as $file) {
             require_once $file;
         }
 
