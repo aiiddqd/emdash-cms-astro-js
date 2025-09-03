@@ -40,7 +40,6 @@ class Plugin
         }
 
         $services = glob(plugin_dir_path(__FILE__).'includes/Services/*.php');
-        // var_dump($services); exit;
         foreach ($services as $file) {
             require_once $file;
         }
