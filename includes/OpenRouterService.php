@@ -36,7 +36,6 @@ class OpenRouterService extends Connector
         }
     }
 
-
     /**
      * Get JSON response by format and prompt
      *
@@ -126,7 +125,7 @@ class OpenRouterService extends Connector
     public function defaultConfig(): array
     {
         return [
-            'timeout' => 60, // seconds
+            'timeout' => 120, // seconds
         ];
     }
 }
@@ -169,6 +168,14 @@ class ChatCompletionsRequest extends Request implements HasBody
 
         return array_merge($defaults, $this->options ?? []);
     }
+
+    // protected function defaultConfig(): array
+    // {
+    //     return [
+    //         'timeout' => 120,        // Request timeout in seconds
+    //         'connect_timeout' => 10, // Connection timeout in seconds
+    //     ];
+    // }
 }
 
 
