@@ -49,10 +49,32 @@ class NotionService
         self::$notion = Notion::create(self::$token);
 
         // $config = Configuration::create(self::$token)
-            // ->enableRetryOnConflict(2);
+        // ->enableRetryOnConflict(2);
 
         // $notion = Notion::createFromConfig($config);
     }
+
+    public static function getService(){
+        return self::$notion;
+    }
+
+    //request to notion api
+    public static function request($route, $data = [], $args = [])
+    {
+        $url = "https://api.notion.com/v1/$route";
+        $args = wp_parse_args($args, [
+            'headers' => [
+                'Authorization' => 'Bearer '.self::$token,
+                'Notion-Version' => '2022-06-28',
+                'Content-Type' => 'application/json',
+            ],
+            'body' => wp_json_encode($data),
+            'method' => 'POST',
+            'data_format' => 'body',
+        ]);
+        return wp_remote_request($url, $args);
+    }
+
 
     /**
      * Retrieve a Notion page by its ID.
@@ -77,7 +99,8 @@ class NotionService
                     StatusFilter::property("Status")->equals($status)
                 )
             )
-            // ->addSort(Sort::property("Status"))
+            ->addSort(Sort::property("Status"))
+            // ->addSort(Sort::property("LastEditedTime")->descending())
             ->changePageSize(1);
         $result = self::$notion->databases()->query($database, $query);
 
