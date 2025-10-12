@@ -49,31 +49,6 @@ abstract class FlowAbstract
         static::init();
         add_action('init', [static::class, 'starter']);
 
-        // if (class_exists('WP_CLI')) {
-        //     WP_CLI::add_command('pftdd', [static::class, 'testDrivenDevelopment']);
-        // }
-
-    }
-
-    public static function testDrivenDevelopment($args)
-    {
-
-        try {
-            $method = $args[0];
-            self::dd($method);
-            self::dd(static::class);
-            // static::starterHandle();
-            if (method_exists(static::class, $method)) {
-                $data = static::$method();
-                if ($data) {
-                    WP_CLI::log(print_r($data, true));
-                }
-                WP_CLI::success('test ended');
-            }
-        } catch (Exception $e) {
-            WP_CLI::error($e->getMessage());
-            WP_CLI::error($e->getTraceAsString());
-        }
     }
 
     abstract public static function init();
@@ -103,7 +78,6 @@ abstract class FlowAbstract
         }
 
         add_action(static::getActionNameWithSlug(), [static::class, 'starterHandle']);
-
     }
 
 
@@ -203,12 +177,4 @@ abstract class FlowAbstract
         return null;
     }
 
-    public static function dd($data, $cli = true)
-    {
-        if ($cli && class_exists('WP_CLI')) {
-            \WP_CLI::line(print_r($data, true));
-        } else {
-            var_dump($data);
-        }
-    }
 }
