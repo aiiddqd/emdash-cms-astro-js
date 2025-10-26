@@ -11,9 +11,14 @@ class ComposerStaticInitaa16b2e7df97a72b019bace92612085b
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
+        'b952b7bb71a5e8271abe3f2cc08a14a8' => __DIR__ . '/..' . '/wordpress/php-ai-client/src/polyfills.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'W' => 
+        array (
+            'WordPress\\AiClient\\' => 19,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Php83\\' => 23,
@@ -36,7 +41,10 @@ class ComposerStaticInitaa16b2e7df97a72b019bace92612085b
         ),
         'H' => 
         array (
+            'Http\\Promise\\' => 13,
+            'Http\\Message\\' => 13,
             'Http\\Discovery\\' => 15,
+            'Http\\Client\\' => 12,
         ),
         'G' => 
         array (
@@ -47,6 +55,10 @@ class ComposerStaticInitaa16b2e7df97a72b019bace92612085b
     );
 
     public static $prefixDirsPsr4 = array (
+        'WordPress\\AiClient\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wordpress/php-ai-client/src',
+        ),
         'Symfony\\Polyfill\\Php83\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php83',
@@ -92,9 +104,21 @@ class ComposerStaticInitaa16b2e7df97a72b019bace92612085b
         array (
             0 => __DIR__ . '/..' . '/mariosimao/notion-sdk-php/src',
         ),
+        'Http\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/promise/src',
+        ),
+        'Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/message-factory/src',
+        ),
         'Http\\Discovery\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-http/discovery/src',
+        ),
+        'Http\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/httplug/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
