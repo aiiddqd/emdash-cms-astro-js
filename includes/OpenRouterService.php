@@ -57,7 +57,6 @@ class OpenRouterService extends Connector
                 ]
             ],
             options: [
-
                 'model' => 'openrouter/auto',
                 'response_format' => [
                     'type' => 'json_object'
@@ -65,7 +64,6 @@ class OpenRouterService extends Connector
             ]);
 
         $response = $this->send($request);
-        // var_dump($response);
         $data = $response->json();
         $data = $data['choices'][0]['message']['content'] ?? null;
 

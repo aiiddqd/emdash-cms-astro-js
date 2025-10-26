@@ -32,7 +32,7 @@ class Plugin
     {
         //add vendor/autoload.php
         require_once plugin_dir_path(__FILE__).'vendor/autoload.php';
-        require_once plugin_dir_path(__FILE__).'includes/abilities-api/abilities-api.php';
+        // require_once plugin_dir_path(__FILE__).'includes/abilities-api/abilities-api.php';
         
 
         //load php files from subfolder includes

@@ -5,7 +5,8 @@
         "nyholm/psr7": "^1.8",
         "psr/http-client": "^1.0",
         "saloonphp/saloon": "^3.0",
-        "wordpress/php-ai-client": "^0.2.0"
+        "wordpress/php-ai-client": "^0.2.0",
+        "wordpress/abilities-api": "^0.3.0"
     },
     "config": {
         "allow-plugins": {
