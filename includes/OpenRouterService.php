@@ -123,7 +123,7 @@ class OpenRouterService extends Connector
     public function defaultConfig(): array
     {
         return [
-            'timeout' => 120, // seconds
+            'timeout' => 333, // seconds
         ];
     }
 }
