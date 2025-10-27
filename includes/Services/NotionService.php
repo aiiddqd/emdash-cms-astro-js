@@ -59,7 +59,7 @@ class NotionService
     }
 
     //request to notion api
-    public static function request($route, $data = [], $args = [])
+    public static function request($route, $data = [], $args = []): array|\WP_Error
     {
         $url = "https://api.notion.com/v1/$route";
         $args = wp_parse_args($args, [
@@ -72,7 +72,14 @@ class NotionService
             'method' => 'POST',
             'data_format' => 'body',
         ]);
-        return wp_remote_request($url, $args);
+
+        $response = wp_remote_request($url, $args);
+        if(!empty($args['raw'])){
+            return $response;
+        }
+
+        $data = wp_remote_retrieve_body($response);
+        return json_decode($data, true);
     }
 
 
@@ -85,6 +92,12 @@ class NotionService
     public static function getPageById($pageId): Page|null
     {
         return self::$notion->pages()->find($pageId);
+    }
+
+
+    //getQuery
+    public static function getQuery(): Query {
+        return Query::create();
     }
 
     /**
