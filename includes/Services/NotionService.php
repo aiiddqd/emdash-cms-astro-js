@@ -59,8 +59,14 @@ class NotionService
         return self::$notion;
     }
 
-    //request to notion api
-    public static function request($route, $data = [], $args = []): array|\WP_Error
+    /**
+     * Send a request to the Notion API.
+     *
+     * @param string $route
+     * @param array $args
+     * @return array|\WP_Error
+     */
+    public static function request($route, $args = []): array|\WP_Error
     {
         $url = "https://api.notion.com/v1/$route";
         $args = wp_parse_args($args, [
@@ -69,10 +75,14 @@ class NotionService
                 'Notion-Version' => '2022-06-28',
                 'Content-Type' => 'application/json',
             ],
-            'body' => wp_json_encode($data),
+            'body' => $args['body'] ?? [],
             'method' => 'POST',
             'data_format' => 'body',
         ]);
+
+        if (isset($args['headers']['Content-Type']) && $args['headers']['Content-Type'] === 'application/json') {
+            $args['body'] = wp_json_encode($args['body'] ?? []);
+        }
 
         $response = wp_remote_request($url, $args);
         if (! empty($args['raw'])) {
