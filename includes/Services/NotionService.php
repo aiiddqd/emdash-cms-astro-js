@@ -54,7 +54,8 @@ class NotionService
         // $notion = Notion::createFromConfig($config);
     }
 
-    public static function getService(){
+    public static function getClient(): Notion
+    {
         return self::$notion;
     }
 
@@ -74,7 +75,7 @@ class NotionService
         ]);
 
         $response = wp_remote_request($url, $args);
-        if(!empty($args['raw'])){
+        if (! empty($args['raw'])) {
             return $response;
         }
 
@@ -96,7 +97,8 @@ class NotionService
 
 
     //getQuery
-    public static function getQuery(): Query {
+    public static function getQuery(): Query
+    {
         return Query::create();
     }
 
