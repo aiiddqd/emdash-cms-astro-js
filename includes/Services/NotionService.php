@@ -80,9 +80,17 @@ class NotionService
             'data_format' => 'body',
         ]);
 
-        if (isset($args['headers']['Content-Type']) && $args['headers']['Content-Type'] === 'application/json') {
-            $args['body'] = wp_json_encode($args['body'] ?? []);
+        if (empty($args['body'])) {
+            unset($args['body']);
+        } else {
+            if (isset($args['headers']['Content-Type']) && $args['headers']['Content-Type'] === 'application/json') {
+                $args['body'] = wp_json_encode($args['body'] ?? []);
+            }
         }
+
+        // if (isset($args['headers']['Content-Type']) && $args['headers']['Content-Type'] === 'application/json') {
+        //     $args['body'] = wp_json_encode($args['body'] ?? []);
+        // }
 
         $response = wp_remote_request($url, $args);
         if (! empty($args['raw'])) {
@@ -93,6 +101,41 @@ class NotionService
         return json_decode($data, true);
     }
 
+    public static function getContent($pageId)
+    {
+        $page = self::request("blocks/$pageId/children", ['method' => 'GET']);
+        
+        //get value from array $page from all elements with key = plain_text - recursively
+        // collect all 'plain_text' values recursively
+        $plain_texts = [];
+        $collect_plain_texts = function ($node) use (&$collect_plain_texts, &$plain_texts) {
+            if (is_array($node)) {
+                foreach ($node as $key => $value) {
+                    if ($key === 'plain_text') {
+                        $plain_texts[] = (string) $value;
+                    }
+                    if (is_array($value) || is_object($value)) {
+                        $collect_plain_texts($value);
+                    }
+                }
+            } elseif (is_object($node)) {
+                foreach (get_object_vars($node) as $key => $value) {
+                    if ($key === 'plain_text') {
+                        $plain_texts[] = (string) $value;
+                    }
+                    if (is_array($value) || is_object($value)) {
+                        $collect_plain_texts($value);
+                    }
+                }
+            }
+        };
+
+        $collect_plain_texts($page);
+
+        // single string with paragraphs separated by blank line
+        $contentPlainText = trim(implode("\n\n", array_filter(array_map('trim', $plain_texts))));
+        return $contentPlainText;
+    }
 
     /**
      * Retrieve a Notion page by its ID.
