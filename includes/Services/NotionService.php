@@ -54,6 +54,12 @@ class NotionService
         // $notion = Notion::createFromConfig($config);
     }
 
+    //gettoken
+    public static function getToken(): string
+    {
+        return ProcessFlows\Plugin::getConfig('notion_api_key');
+    }
+
     public static function getClient(): Notion
     {
         return self::$notion;
@@ -71,7 +77,7 @@ class NotionService
         $url = "https://api.notion.com/v1/$route";
         $args = wp_parse_args($args, [
             'headers' => [
-                'Authorization' => 'Bearer '.self::$token,
+                'Authorization' => 'Bearer '.self::getToken(),
                 'Notion-Version' => '2022-06-28',
                 'Content-Type' => 'application/json',
             ],
