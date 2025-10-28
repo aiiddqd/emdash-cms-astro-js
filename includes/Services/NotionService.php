@@ -41,17 +41,11 @@ class NotionService
             self::$token = ProcessFlows\Plugin::getConfig('notion_api_key');
         }
 
-        // if empty self::$token
         if (empty(self::$token)) {
             throw new \Exception('Notion API token is not set.');
         }
 
         self::$notion = Notion::create(self::$token);
-
-        // $config = Configuration::create(self::$token)
-        // ->enableRetryOnConflict(2);
-
-        // $notion = Notion::createFromConfig($config);
     }
 
     //gettoken
