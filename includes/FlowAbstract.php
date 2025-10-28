@@ -2,7 +2,7 @@
 
 namespace ProcessFlows;
 
-use WP_REST_Request, WP_Error, WP_CLI;
+use WP_REST_Request, WP_Error, WP_CLI, Exception;
 
 abstract class FlowAbstract
 {
@@ -60,7 +60,7 @@ abstract class FlowAbstract
      * 
      * @return void
      */
-    public static function starter()
+    final public static function starter()
     {
         if (empty(static::$intervalInSeconds)) {
             return;
@@ -78,6 +78,63 @@ abstract class FlowAbstract
         }
 
         add_action(static::getActionNameWithSlug(), [static::class, 'starterHandle']);
+
+        //if exist method static::trigger
+        if (method_exists(static::class, 'trigger')) {
+
+            if (! as_next_scheduled_action(static::getActionNameWithSlug('trigger'))) {
+                as_schedule_recurring_action(
+                    time(),
+                    static::$intervalInSeconds,
+                    static::getActionNameWithSlug('trigger'),
+                    [],
+                    Plugin::$slug,
+                    true
+                );
+            }
+            
+            add_action(static::getActionNameWithSlug('trigger'), [static::class, 'trigger']);
+
+            add_action(self::getActionNameWithSlug('handle'), [self::class, 'handle']);
+        }
+    }
+
+    final static public function handle($payload = [])
+    {
+        try {
+            $ability = wp_get_ability($payload['ability'] ?? null);
+            if (empty($ability) || is_wp_error($ability)) {
+                throw new Exception("Ability not found: $ability");
+            }
+
+            $input = $payload['input'] ?? null;
+
+            $output = $ability->execute($input);
+
+            if (is_wp_error($output)) {
+                throw new Exception('Error executing ability: '.$output->get_error_message());
+            }
+
+            if (isset($output['ability']) && is_string($output['ability'])) {
+                $newActionPayload = ['ability' => $output['ability']];
+                if (isset($output['input'])) {
+                    $newActionPayload['input'] = $output['input'];
+                }
+                self::scheduleSingleAction('handle', $newActionPayload);
+            }
+
+            self::log('Content agent flow completed.', [
+                'payload' => $payload,
+                'output' => $output]
+            );
+
+        } catch (\Throwable $e) {
+            $context = [
+                'payload' => $payload ?? null,
+                'backtrace' => $e->getTraceAsString(),
+            ];
+            self::log("Error: {$e->getMessage()}", $context);
+        }
     }
 
 
@@ -134,7 +191,6 @@ abstract class FlowAbstract
         as_schedule_single_action(time(), static::getActionNameWithSlug(), [$payload], Plugin::$slug, true);
     }
 
-    //used in includes/StatusForFlow.php#L26
     public static function getActionNameWithSlug($key = '')
     {
         if (empty($key)) {
