@@ -66,7 +66,7 @@ class NotionService
      * @param array $args
      * @return array|\WP_Error
      */
-    public static function request($route, $args = []): array|\WP_Error
+    public static function request($route, $args = [])
     {
         $url = "https://api.notion.com/v1/$route";
         $args = wp_parse_args($args, [
