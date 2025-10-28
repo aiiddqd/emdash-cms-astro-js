@@ -42,8 +42,6 @@ abstract class FlowAbstract
      */
     public static string $description;
 
-
-
     public function __invoke()
     {
         static::init();
@@ -92,7 +90,7 @@ abstract class FlowAbstract
                     true
                 );
             }
-            
+
             add_action(static::getActionNameWithSlug('trigger'), [static::class, 'trigger']);
 
             add_action(self::getActionNameWithSlug('handle'), [self::class, 'handle']);
