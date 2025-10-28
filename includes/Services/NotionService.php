@@ -78,7 +78,7 @@ class NotionService
             'body' => $args['body'] ?? [],
             'method' => 'POST',
             'data_format' => 'body',
-            'timeout' => 15,
+            'timeout' => 33,
         ]);
 
         if (empty($args['body'])) {
