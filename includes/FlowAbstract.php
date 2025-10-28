@@ -44,20 +44,7 @@ abstract class FlowAbstract
     {
         static::init();
         add_action('init', [static::class, 'starter']);
-
-        // add_filter('testeroid_tests', [self::class, 'tests']);
-
     }
-
-    // public static function tests($tests)
-    // {
-    //     $tests['FlowAbstract'] = function () {
-    //         // Example test logic for the flow
-    //         return true;
-    //     };
-
-    //     return $tests;
-    // }
 
     abstract public static function init();
 
@@ -107,7 +94,7 @@ abstract class FlowAbstract
                         time(),
                         $schedule,
                         static::getActionNameWithSlug('trigger'),
-                        $config,
+                        ['payload' => $config],
                         Plugin::$slug,
                         true
                     );
@@ -115,8 +102,7 @@ abstract class FlowAbstract
             }
 
         }
-        add_action(static::getActionNameWithSlug('trigger'), [self::class, 'trigger']);
-        add_action(static::getActionNameWithSlug('handle'), [self::class, 'handle']);
+        
     }
 
 
@@ -128,19 +114,19 @@ abstract class FlowAbstract
     public static function trigger($payload = [])
     {
         try {
-            if (empty($payload)) {
-                $payload = [];
+            $payloadHandle = [
+                // 'payload' => $payload,
+            ];
+
+            if (isset($payload['ability'])) {
+                $payloadHandle['ability'] = $payload['ability'];
             }
 
-            if (isset($ability)) {
-                $payload['ability'] = $ability;
+            if (isset($payload['input'])) {
+                $payloadHandle['input'] = $payload['input'];
             }
 
-            if (isset($input)) {
-                $payload['input'] = $input;
-            }
-
-            static::scheduleSingleAction('handle', $payload);
+            static::scheduleSingleAction('handle', $payloadHandle);
 
         } catch (\Throwable $e) {
             $context = [
@@ -156,7 +142,7 @@ abstract class FlowAbstract
         return [];
     }
 
-    final static public function handle($payload = [])
+    final public static function handle($payload = [])
     {
         try {
             $ability = wp_get_ability($payload['ability'] ?? null);
