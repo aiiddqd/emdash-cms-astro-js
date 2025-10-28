@@ -78,6 +78,7 @@ class NotionService
             'body' => $args['body'] ?? [],
             'method' => 'POST',
             'data_format' => 'body',
+            'timeout' => 15,
         ]);
 
         if (empty($args['body'])) {
@@ -87,10 +88,6 @@ class NotionService
                 $args['body'] = wp_json_encode($args['body'] ?? []);
             }
         }
-
-        // if (isset($args['headers']['Content-Type']) && $args['headers']['Content-Type'] === 'application/json') {
-        //     $args['body'] = wp_json_encode($args['body'] ?? []);
-        // }
 
         $response = wp_remote_request($url, $args);
         if (! empty($args['raw'])) {
