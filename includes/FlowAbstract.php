@@ -14,7 +14,6 @@ abstract class FlowAbstract
      */
     protected static ?int $intervalInSeconds = null;
 
-
     /**
      * The slug for the flow
      * 
@@ -23,7 +22,6 @@ abstract class FlowAbstract
      * Also used for actions, routing and webhook purposes.
      */
     public static string $slug;
-
 
     /**
      * The title for the flow
@@ -47,7 +45,19 @@ abstract class FlowAbstract
         static::init();
         add_action('init', [static::class, 'starter']);
 
+        // add_filter('testeroid_tests', [self::class, 'tests']);
+
     }
+
+    // public static function tests($tests)
+    // {
+    //     $tests['FlowAbstract'] = function () {
+    //         // Example test logic for the flow
+    //         return true;
+    //     };
+
+    //     return $tests;
+    // }
 
     abstract public static function init();
 
@@ -77,24 +87,73 @@ abstract class FlowAbstract
 
         add_action(static::getActionNameWithSlug(), [static::class, 'starterHandle']);
 
-        //if exist method static::trigger
-        if (method_exists(static::class, 'trigger')) {
+        if (method_exists(static::class, 'getConfig')) {
 
-            if (! as_next_scheduled_action(static::getActionNameWithSlug('trigger'))) {
-                as_schedule_recurring_action(
-                    time(),
-                    static::$intervalInSeconds,
-                    static::getActionNameWithSlug('trigger'),
-                    [],
-                    Plugin::$slug,
-                    true
-                );
+            /**
+             * @var array $config = [
+             *     'schedule' => int, // in seconds
+             *     'ability' => string, // ability slug
+             *     'slug' => string, // flow slug
+             *     'input' => [],
+             *  ]
+             */
+            $config = static::getConfig();
+
+            $schedule = $config['schedule'] ?? 0;
+
+            if (intval($schedule) > 0) {
+                if (! as_next_scheduled_action(static::getActionNameWithSlug('trigger'))) {
+                    as_schedule_recurring_action(
+                        time(),
+                        $schedule,
+                        static::getActionNameWithSlug('trigger'),
+                        $config,
+                        Plugin::$slug,
+                        true
+                    );
+                }
             }
 
-            add_action(static::getActionNameWithSlug('trigger'), [static::class, 'trigger']);
-
-            add_action(self::getActionNameWithSlug('handle'), [self::class, 'handle']);
         }
+        add_action(static::getActionNameWithSlug('trigger'), [self::class, 'trigger']);
+        add_action(static::getActionNameWithSlug('handle'), [self::class, 'handle']);
+    }
+
+
+    /**
+     * trigger runs actions according config of Flow
+     * 
+     * @return void
+     */
+    public static function trigger($payload = [])
+    {
+        try {
+            if (empty($payload)) {
+                $payload = [];
+            }
+
+            if (isset($ability)) {
+                $payload['ability'] = $ability;
+            }
+
+            if (isset($input)) {
+                $payload['input'] = $input;
+            }
+
+            static::scheduleSingleAction('handle', $payload);
+
+        } catch (\Throwable $e) {
+            $context = [
+                'payload' => $payload ?? null,
+                'backtrace' => $e->getTraceAsString(),
+            ];
+            static::log('Error: '.$e->getMessage(), $context);
+        }
+    }
+
+    public static function getConfig()
+    {
+        return [];
     }
 
     final static public function handle($payload = [])
