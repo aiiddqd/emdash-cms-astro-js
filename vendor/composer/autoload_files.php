@@ -10,6 +10,4 @@ return array(
     '7b11c4dc42b3b3023073cb14e519683c' => $vendorDir . '/ralouphie/getallheaders/src/getallheaders.php',
     '37a3dc5111fe8f707ab4c132ef1dbc62' => $vendorDir . '/guzzlehttp/guzzle/src/functions_include.php',
     '662a729f963d39afe703c9d9b7ab4a8c' => $vendorDir . '/symfony/polyfill-php83/bootstrap.php',
-    '2d223b650b5c56928c1affa16ee5cfe2' => $vendorDir . '/wordpress/abilities-api/includes/bootstrap.php',
-    'b952b7bb71a5e8271abe3f2cc08a14a8' => $vendorDir . '/wordpress/php-ai-client/src/polyfills.php',
 );
