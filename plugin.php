@@ -1,15 +1,15 @@
 <?php
 /**
- * Plugin Name: @ Process Flows
+ * Plugin Name: @ Flower
  * Plugin URI:  https://github.com/aiiddqd/process-flows
- * Description: Workflow automation for WordPress.
+ * Description: Automations & Flows: triggers, hooks, events and workflow automations for WordPress & WooCommerce.
  * Author:      AI
  * Author URI:  https://github.com/aiiddqd/
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: flower
  * Requires Plugins:  woocommerce
- * Text Domain: process-flows
- * Version:     0.2.251025
+ * Version:           0.3.251201
  */
 
 namespace ProcessFlows;
@@ -45,7 +45,10 @@ class Plugin
         }
 
         add_action('init', function () {
-            self::$flows = apply_filters('processflow_flows', []);
+            $flowerItems = apply_filters('flower/flows', []);
+
+            self::$flows = apply_filters_deprecated('processflow_flows', $flowerItems, '0.3.251201', 'flower/flows');
+
             // dd(self::$flows);
             foreach (self::$flows as $flowClass) {
                 $flow = new $flowClass();
@@ -118,7 +121,7 @@ class Plugin
     public static function load_text_domain()
     {
         load_plugin_textdomain(
-            'process-flows', // Text domain
+            'aaf', // Text domain
             false, // No deprecated folder
             plugin_basename(dirname(__FILE__).'/languages') // Path to languages folder
         );
