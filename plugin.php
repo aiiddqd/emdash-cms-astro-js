@@ -45,11 +45,15 @@ class Plugin
         }
 
         add_action('init', function () {
-            $flowerItems = apply_filters('flower/flows', []);
+            $flowerItemsLegacy = apply_filters_deprecated('processflow_flows', [[]], '0.3.251201', 'flower/flows');
+            
+            self::$flows = apply_filters('flower/flows', $flowerItemsLegacy);
+            
+            // dd(self::$flows, $flowerItemsLegacy);
+            if(empty(self::$flows)) {
+                return;
+            }
 
-            self::$flows = apply_filters_deprecated('processflow_flows', $flowerItems, '0.3.251201', 'flower/flows');
-
-            // dd(self::$flows);
             foreach (self::$flows as $flowClass) {
                 $flow = new $flowClass();
                 if (is_callable($flow)) {
@@ -61,7 +65,7 @@ class Plugin
 
         add_filter('plugin_action_links_'.plugin_basename(__FILE__), function ($links) {
             $settings_link = admin_url('edit.php?post_type=flow&page=process-flows');
-            $links[] = '<a href="'.esc_url($settings_link).'">'.__('Settings', 'process-flows').'</a>';
+            $links[] = '<a href="'.esc_url($settings_link).'">'.__('Settings', 'flower').'</a>';
             return $links;
         });
 
