@@ -207,17 +207,17 @@ class NotionService
             function () {
                 echo '<p>'.__('Configure Notion API integration settings.', 'process-flows').'</p>';
             },
-            ProcessFlows\Plugin::$settings_slug
+            flower()::$settings_slug
         );
 
         add_settings_field(
             'notion_api_key',
             __('Notion API Key', 'process-flows'),
             function () {
-                $value = ProcessFlows\Plugin::getConfig('notion_api_key');
-                echo '<input type="text" name="'.ProcessFlows\Plugin::getConfigFieldName('notion_api_key').'" value="'.esc_attr($value).'" />';
+                $value = flower()->getConfig('notion_api_key');
+                echo '<input type="text" name="'.flower()->getConfigFieldName('notion_api_key').'" value="'.esc_attr($value).'" />';
             },
-            ProcessFlows\Plugin::$settings_slug,
+            flower()::$settings_slug,
             'notion_integration'
         );
     }
