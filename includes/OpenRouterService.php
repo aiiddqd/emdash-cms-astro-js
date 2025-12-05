@@ -36,7 +36,6 @@ class OpenRouterService extends Connector
         }
     }
 
-
     /**
      * Get JSON response by format and prompt
      *
@@ -58,7 +57,6 @@ class OpenRouterService extends Connector
                 ]
             ],
             options: [
-
                 'model' => 'openrouter/auto',
                 'response_format' => [
                     'type' => 'json_object'
@@ -66,7 +64,6 @@ class OpenRouterService extends Connector
             ]);
 
         $response = $this->send($request);
-        // var_dump($response);
         $data = $response->json();
         $data = $data['choices'][0]['message']['content'] ?? null;
 
@@ -126,7 +123,7 @@ class OpenRouterService extends Connector
     public function defaultConfig(): array
     {
         return [
-            'timeout' => 60, // seconds
+            'timeout' => 333, // seconds
         ];
     }
 }
@@ -169,6 +166,14 @@ class ChatCompletionsRequest extends Request implements HasBody
 
         return array_merge($defaults, $this->options ?? []);
     }
+
+    // protected function defaultConfig(): array
+    // {
+    //     return [
+    //         'timeout' => 120,        // Request timeout in seconds
+    //         'connect_timeout' => 10, // Connection timeout in seconds
+    //     ];
+    // }
 }
 
 
@@ -200,15 +205,15 @@ class OpenRouterServiceLegacy
             function () {
                 echo '<p>'.__('Configure OpenRouter API integration settings.', 'process-flows').'</p>';
             },
-            Plugin::$settings_slug
+            flower()::$settings_slug
         );
 
         add_settings_field(
             'openrouter_api_key',
             __('OpenRouter API Key', 'process-flows'),
             function () {
-                $value = Plugin::getConfig('openrouter_api_key');
-                echo '<input type="text" name="'.Plugin::getConfigFieldName('openrouter_api_key').'" value="'.esc_attr($value).'" />';
+                $value = flower()->getConfig('openrouter_api_key');
+                echo '<input type="text" name="'.flower()->getConfigFieldName('openrouter_api_key').'" value="'.esc_attr($value).'" />';
             },
             Plugin::$settings_slug,
             'openrouter_integration'
