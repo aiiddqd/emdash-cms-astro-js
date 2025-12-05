@@ -205,15 +205,15 @@ class OpenRouterServiceLegacy
             function () {
                 echo '<p>'.__('Configure OpenRouter API integration settings.', 'process-flows').'</p>';
             },
-            Plugin::$settings_slug
+            flower()::$settings_slug
         );
 
         add_settings_field(
             'openrouter_api_key',
             __('OpenRouter API Key', 'process-flows'),
             function () {
-                $value = Plugin::getConfig('openrouter_api_key');
-                echo '<input type="text" name="'.Plugin::getConfigFieldName('openrouter_api_key').'" value="'.esc_attr($value).'" />';
+                $value = flower()->getConfig('openrouter_api_key');
+                echo '<input type="text" name="'.flower()->getConfigFieldName('openrouter_api_key').'" value="'.esc_attr($value).'" />';
             },
             Plugin::$settings_slug,
             'openrouter_integration'

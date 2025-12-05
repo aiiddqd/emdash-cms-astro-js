@@ -22,10 +22,13 @@ namespace {
 namespace Flower {
 
     Flower::getInstance();
-    
+
     class Flower
     {
         private static $instance = null;
+
+        public static $settings_slug = 'process-flows-settings';
+
 
         public static function getInstance()
         {
@@ -37,8 +40,54 @@ namespace Flower {
 
         private function __construct()
         {
-            // Private constructor to prevent direct instantiation
+            add_action('admin_menu', [$this, 'add_settings_page'], 20);
+            add_action('admin_init', [$this, 'add_config_option']);
+
         }
+
+        public function add_settings_page()
+        {
+            add_submenu_page(
+                'edit.php?post_type=flow',
+                __('Settings', 'process-flows'),
+                __('Settings', 'process-flows'),
+                'manage_options',
+                'process-flows',
+                function () {
+
+                    // Render the settings page content
+                    ?>
+                <div class="wrap">
+                    <h1><?php _e('Process Flows Settings', 'process-flows'); ?></h1>
+                    <form method="post" action="options.php">
+                        <?php
+                            settings_fields(self::$settings_slug);
+                            do_settings_sections(self::$settings_slug);
+                            submit_button();
+                            ?>
+                    </form>
+                </div>
+                <?php
+                }
+            );
+        }
+
+        public function add_config_option()
+        {
+            register_setting(self::$settings_slug, 'process_flows');
+        }
+
+        public function getConfig($key = null)
+        {
+            $config = get_option('process_flows', []);
+            return $key ? ($config[$key] ?? null) : $config;
+        }
+
+        public function getConfigFieldName($key = null)
+        {
+            return 'process_flows'.($key ? "[$key]" : '');
+        }
+
 
         private function __clone()
         {
@@ -115,16 +164,11 @@ namespace ProcessFlows {
 
             register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
 
-            add_action('admin_menu', [self::class, 'add_settings_page'], 20);
-            add_action('admin_init', [self::class, 'add_config_option']);
             // add_action('init', [self::class, 'load_text_domain']);
 
         }
 
-        public static function add_config_option()
-        {
-            register_setting(Plugin::$settings_slug, 'process_flows');
-        }
+
 
         public static function getConfig($key = null)
         {
@@ -137,32 +181,7 @@ namespace ProcessFlows {
             return 'process_flows'.($key ? "[$key]" : '');
         }
 
-        public static function add_settings_page()
-        {
-            add_submenu_page(
-                'edit.php?post_type=flow',
-                __('Settings', 'process-flows'),
-                __('Settings', 'process-flows'),
-                'manage_options',
-                'process-flows',
-                function () {
 
-                    // Render the settings page content
-                    ?>
-                <div class="wrap">
-                    <h1><?php _e('Process Flows Settings', 'process-flows'); ?></h1>
-                    <form method="post" action="options.php">
-                        <?php
-                            settings_fields(self::$settings_slug);
-                            do_settings_sections(self::$settings_slug);
-                            submit_button();
-                            ?>
-                    </form>
-                </div>
-                <?php
-                }
-            );
-        }
 
         public static function load_text_domain()
         {
