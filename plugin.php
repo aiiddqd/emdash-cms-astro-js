@@ -12,134 +12,178 @@
  * Version:           0.3.251201
  */
 
-namespace ProcessFlows;
-
-// Prevent direct access to the file
-if (! defined('ABSPATH')) {
-    exit; // Exit if accessed directly
+namespace {
+    function flower(): Flower\Flower
+    {
+        return \Flower\Flower::getInstance();
+    }
 }
 
-Plugin::init();
+namespace Flower {
 
-class Plugin
-{
-    public static $slug = 'process-flows';
-    public static $settings_slug = 'process-flows-settings';
-
-    public static $flows = [];
-
-    public static function init()
+    Flower::getInstance();
+    
+    class Flower
     {
-        //add vendor/autoload.php
-        require_once plugin_dir_path(__FILE__).'vendor/autoload.php';
+        private static $instance = null;
 
-        //load php files from subfolder includes
-        $includes = glob(plugin_dir_path(__FILE__).'includes/*.php');
-        foreach ($includes as $file) {
-            require_once $file;
+        public static function getInstance()
+        {
+            if (self::$instance === null) {
+                self::$instance = new self();
+            }
+            return self::$instance;
         }
 
-        $services = glob(plugin_dir_path(__FILE__).'includes/Services/*.php');
-        foreach ($services as $file) {
-            require_once $file;
+        private function __construct()
+        {
+            // Private constructor to prevent direct instantiation
         }
 
-        add_action('init', function () {
-            $flowerItemsLegacy = apply_filters_deprecated('processflow_flows', [[]], '0.3.251201', 'flower/flows');
-            
-            self::$flows = apply_filters('flower/flows', $flowerItemsLegacy);
-            
-            // dd(self::$flows, $flowerItemsLegacy);
-            if(empty(self::$flows)) {
-                return;
+        private function __clone()
+        {
+            // Prevent cloning
+        }
+
+        public function __wakeup()
+        {
+            throw new \Exception("Cannot unserialize singleton");
+        }
+
+
+    }
+}
+
+namespace ProcessFlows {
+
+    // Prevent direct access to the file
+    if (! defined('ABSPATH')) {
+        exit; // Exit if accessed directly
+    }
+
+    Plugin::init();
+
+    class Plugin
+    {
+        public static $slug = 'process-flows';
+        public static $settings_slug = 'process-flows-settings';
+
+        public static $flows = [];
+
+        public static function init()
+        {
+            //add vendor/autoload.php
+            require_once plugin_dir_path(__FILE__).'vendor/autoload.php';
+
+            //load php files from subfolder includes
+            $includes = glob(plugin_dir_path(__FILE__).'includes/*.php');
+            foreach ($includes as $file) {
+                require_once $file;
             }
 
-            foreach (self::$flows as $flowClass) {
-                $flow = new $flowClass();
-                if (is_callable($flow)) {
-                    $flow();
+            $services = glob(plugin_dir_path(__FILE__).'includes/Services/*.php');
+            foreach ($services as $file) {
+                require_once $file;
+            }
+
+            add_action('init', function () {
+                $flowerItemsLegacy = apply_filters_deprecated('processflow_flows', [[]], '0.3.251201', 'flower/flows');
+
+                self::$flows = apply_filters('flower/flows', $flowerItemsLegacy);
+
+                // dd(self::$flows, $flowerItemsLegacy);
+                if (empty(self::$flows)) {
+                    return;
                 }
-            }
-        }, 5);
+
+                foreach (self::$flows as $flowClass) {
+                    $flow = new $flowClass();
+                    if (is_callable($flow)) {
+                        $flow();
+                    }
+                }
+            }, 5);
 
 
-        add_filter('plugin_action_links_'.plugin_basename(__FILE__), function ($links) {
-            $settings_link = admin_url('edit.php?post_type=flow&page=process-flows');
-            $links[] = '<a href="'.esc_url($settings_link).'">'.__('Settings', 'flower').'</a>';
-            return $links;
-        });
+            add_filter('plugin_action_links_'.plugin_basename(__FILE__), function ($links) {
+                $settings_link = admin_url('edit.php?post_type=flow&page=process-flows');
+                $links[] = '<a href="'.esc_url($settings_link).'">'.__('Settings', 'flower').'</a>';
+                return $links;
+            });
 
-        register_activation_hook(__FILE__, [self::class, 'plugin_activation']);
+            register_activation_hook(__FILE__, [self::class, 'plugin_activation']);
 
-        register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
+            register_deactivation_hook(__FILE__, [self::class, 'plugin_deactivation']);
 
-        add_action('admin_menu', [self::class, 'add_settings_page'], 20);
-        add_action('admin_init', [self::class, 'add_config_option']);
-        // add_action('init', [self::class, 'load_text_domain']);
+            add_action('admin_menu', [self::class, 'add_settings_page'], 20);
+            add_action('admin_init', [self::class, 'add_config_option']);
+            // add_action('init', [self::class, 'load_text_domain']);
 
+        }
+
+        public static function add_config_option()
+        {
+            register_setting(Plugin::$settings_slug, 'process_flows');
+        }
+
+        public static function getConfig($key = null)
+        {
+            $config = get_option('process_flows', []);
+            return $key ? ($config[$key] ?? null) : $config;
+        }
+
+        public static function getConfigFieldName($key = null)
+        {
+            return 'process_flows'.($key ? "[$key]" : '');
+        }
+
+        public static function add_settings_page()
+        {
+            add_submenu_page(
+                'edit.php?post_type=flow',
+                __('Settings', 'process-flows'),
+                __('Settings', 'process-flows'),
+                'manage_options',
+                'process-flows',
+                function () {
+
+                    // Render the settings page content
+                    ?>
+                <div class="wrap">
+                    <h1><?php _e('Process Flows Settings', 'process-flows'); ?></h1>
+                    <form method="post" action="options.php">
+                        <?php
+                            settings_fields(self::$settings_slug);
+                            do_settings_sections(self::$settings_slug);
+                            submit_button();
+                            ?>
+                    </form>
+                </div>
+                <?php
+                }
+            );
+        }
+
+        public static function load_text_domain()
+        {
+            load_plugin_textdomain(
+                'aaf', // Text domain
+                false, // No deprecated folder
+                plugin_basename(dirname(__FILE__).'/languages') // Path to languages folder
+            );
+        }
+
+        // Your plugin code goes here
+        public static function plugin_activation()
+        {
+            // Code to run on activation
+        }
+
+
+        public static function plugin_deactivation()
+        {
+            // Code to run on deactivation
+        }
     }
 
-    public static function add_config_option()
-    {
-        register_setting(Plugin::$settings_slug, 'process_flows');
-    }
-
-    public static function getConfig($key = null)
-    {
-        $config = get_option('process_flows', []);
-        return $key ? ($config[$key] ?? null) : $config;
-    }
-
-    public static function getConfigFieldName($key = null)
-    {
-        return 'process_flows'.($key ? "[$key]" : '');
-    }
-
-    public static function add_settings_page()
-    {
-        add_submenu_page(
-            'edit.php?post_type=flow',
-            __('Settings', 'process-flows'),
-            __('Settings', 'process-flows'),
-            'manage_options',
-            'process-flows',
-            function () {
-
-                // Render the settings page content
-                ?>
-            <div class="wrap">
-                <h1><?php _e('Process Flows Settings', 'process-flows'); ?></h1>
-                <form method="post" action="options.php">
-                    <?php
-                        settings_fields(self::$settings_slug);
-                        do_settings_sections(self::$settings_slug);
-                        submit_button();
-                        ?>
-                </form>
-            </div>
-            <?php
-            }
-        );
-    }
-
-    public static function load_text_domain()
-    {
-        load_plugin_textdomain(
-            'aaf', // Text domain
-            false, // No deprecated folder
-            plugin_basename(dirname(__FILE__).'/languages') // Path to languages folder
-        );
-    }
-
-    // Your plugin code goes here
-    public static function plugin_activation()
-    {
-        // Code to run on activation
-    }
-
-
-    public static function plugin_deactivation()
-    {
-        // Code to run on deactivation
-    }
 }
