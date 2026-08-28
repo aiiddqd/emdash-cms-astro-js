@@ -1,64 +1,61 @@
-# EmDash Blog Template
+# Astro + EmDash CMS
 
-A clean, minimal blog built with [EmDash](https://github.com/emdash-cms/emdash). Runs on any Node.js server with SQLite and local file storage.
+CMS-блог на [Astro](https://astro.build/) и [EmDash](https://emdashcms.com/): публичный SSR-сайт и полноценная административная панель в одном Node.js-приложении. Контент хранится в SQLite, а медиа — в локальном файловом хранилище.
 
-![Blog template homepage](https://raw.githubusercontent.com/emdash-cms/emdash/main/assets/templates/blog/latest/homepage-light-desktop.jpg)
+## Возможности
 
-## What's Included
+- статьи, отдельные страницы, рубрики и теги;
+- полнотекстовый поиск и RSS;
+- черновики, ревизии, SEO-поля и аудит действий CMS;
+- редактирование контента через EmDash Admin UI;
+- серверный рендеринг через `@astrojs/node`.
 
-- Featured post hero on the homepage
-- Post archive with reading time estimates
-- Category and tag archives
-- Full-text search
-- RSS feed
-- SEO metadata and JSON-LD
-- Dark/light mode
-- Audit log plugin
+## Быстрый старт
 
-## Pages
-
-| Page | Route |
-|---|---|
-| Homepage | `/` |
-| All posts | `/posts` |
-| Single post | `/posts/:slug` |
-| Category archive | `/category/:slug` |
-| Tag archive | `/tag/:slug` |
-| Search | `/search` |
-| Static pages | `/pages/:slug` |
-| 404 | fallback |
-
-## Screenshots
-
-| | Desktop | Mobile |
-|---|---|---|
-| Light | ![homepage light desktop](https://raw.githubusercontent.com/emdash-cms/emdash/main/assets/templates/blog/latest/homepage-light-desktop.jpg) | ![homepage light mobile](https://raw.githubusercontent.com/emdash-cms/emdash/main/assets/templates/blog/latest/homepage-light-mobile.jpg) |
-| Dark | ![homepage dark desktop](https://raw.githubusercontent.com/emdash-cms/emdash/main/assets/templates/blog/latest/homepage-dark-desktop.jpg) | ![homepage dark mobile](https://raw.githubusercontent.com/emdash-cms/emdash/main/assets/templates/blog/latest/homepage-dark-mobile.jpg) |
-
-## Infrastructure
-
-- **Runtime:** Node.js
-- **Database:** SQLite (local file)
-- **Storage:** Local filesystem
-- **Framework:** Astro with `@astrojs/node`
-
-## Getting Started
+Нужны Node.js 22.12+ и npm 10+.
 
 ```bash
-pnpm install
-pnpm bootstrap
-pnpm dev
+npm ci
+make dev
 ```
 
-Open http://localhost:4321 for the site and http://localhost:4321/_emdash/admin for the CMS.
+Откройте <http://localhost:4321> для сайта или <http://localhost:4321/_emdash/admin> для админки.
 
-## Want Cloudflare Instead?
+В репозитории есть `package-lock.json`, поэтому используем npm. Полный порядок первого запуска, работа с локальными данными и команды описаны в [docs/specs/local-env.md](docs/specs/local-env.md).
 
-See the [Cloudflare variant](../blog-cloudflare) for a version that deploys to Cloudflare Workers with D1 and R2.
+## Основные команды
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/emdash-cms/templates/tree/main/blog-cloudflare)
+```bash
+make help       # все команды
+make dev        # сервер разработки
+make typecheck  # проверка типов
+make build      # production-сборка
+make start      # запуск standalone-сборки
+make verify     # typecheck + build
+```
 
-## See Also
+`make types` запускает генерацию типов EmDash и требует работающий dev-сервер.
 
-- [All templates](../)
-- [EmDash documentation](https://github.com/emdash-cms/emdash/tree/main/docs)
+## Архитектура и контент
+
+- Astro работает в SSR-режиме (`output: "server"`) с standalone Node adapter.
+- EmDash подключён как Astro integration; схема и demo-контент описаны в `seed/seed.json`.
+- SQLite находится в `data.db`, загружаемые медиа — в `uploads/`.
+- Публичные маршруты: `/`, `/posts`, `/posts/[slug]`, `/pages/[slug]`, `/category/[slug]`, `/tag/[slug]`, `/search` и `/rss.xml`.
+
+Подробная схема решения, границы MVP и план следующего этапа доступны в [docs/specs/basic.md](docs/specs/basic.md). Исходные исследовательские материалы лежат в `docs/rfc/`.
+
+## Структура проекта
+
+| Путь | Назначение |
+| --- | --- |
+| `astro.config.mjs` | Astro, EmDash, SQLite и локальное хранилище. |
+| `seed/seed.json` | Схема CMS, меню, таксономии, виджеты и demo-контент. |
+| `src/live.config.ts` | Регистрация EmDash Live Collections; не изменять без необходимости. |
+| `src/pages/` | Серверные маршруты публичного сайта. |
+| `src/layouts/Base.astro` | Базовый layout, меню, поиск и contributions EmDash. |
+| `docs/specs/` | Актуальные спецификации решения и локальной среды. |
+
+## План публикации
+
+MVP проверяется локально. Затем возможны два сценария Bunny.net: SSG-сборка в Storage/Pull Zone или SSR-приложение в Magic Containers с persistent volume для SQLite и медиа. Это решение ещё не реализовано; контекст — в [RFC](RFC.md).
