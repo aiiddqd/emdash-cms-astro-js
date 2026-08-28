@@ -1,77 +1,64 @@
-# Process Flows WordPress Plugin
+# EmDash Blog Template
 
-**Code driven configuration and visual control in WP console.**
+A clean, minimal blog built with [EmDash](https://github.com/emdash-cms/emdash). Runs on any Node.js server with SQLite and local file storage.
 
-official website https://github.com/aiiddqd/process-flows
+![Blog template homepage](https://raw.githubusercontent.com/emdash-cms/emdash/main/assets/templates/blog/latest/homepage-light-desktop.jpg)
 
-## Overview
-Process Flows is a powerful WordPress plugin designed to streamline and automate business processes, workflows, and tasks within your WordPress site. By integrating advanced automation features and AI-driven agents, it empowers users to create, manage, and optimize complex workflows with ease.
+## What's Included
 
-## Features
+- Featured post hero on the homepage
+- Post archive with reading time estimates
+- Category and tag archives
+- Full-text search
+- RSS feed
+- SEO metadata and JSON-LD
+- Dark/light mode
+- Audit log plugin
 
-- Workflow Automation: Build and customize workflows to automate repetitive tasks, approvals, and notifications.
-- AI Agents: Leverage intelligent AI agents to handle dynamic decision-making, content generation, and task prioritization.
-- Flexible Process Management: Create multi-step processes with conditional logic, triggers, and actions.
-- Seamless Integration: Works with popular WordPress plugins and external tools via APIs.
-- User-Friendly Interface: Intuitive drag-and-drop builder for designing workflows without coding.
-- Real-Time Monitoring: Track workflow progress and performance with detailed analytics and logs.
-- Customizable Notifications: Set up email, in-app, or external notifications for process updates.
-- Scalable Architecture: Suitable for small businesses to enterprise-level operations.
+## Pages
 
-# Installation
+| Page | Route |
+|---|---|
+| Homepage | `/` |
+| All posts | `/posts` |
+| Single post | `/posts/:slug` |
+| Category archive | `/category/:slug` |
+| Tag archive | `/tag/:slug` |
+| Search | `/search` |
+| Static pages | `/pages/:slug` |
+| 404 | fallback |
 
-## WP CLI
+## Screenshots
 
-To install the Process Flows plugin using WP CLI, run:
+| | Desktop | Mobile |
+|---|---|---|
+| Light | ![homepage light desktop](https://raw.githubusercontent.com/emdash-cms/emdash/main/assets/templates/blog/latest/homepage-light-desktop.jpg) | ![homepage light mobile](https://raw.githubusercontent.com/emdash-cms/emdash/main/assets/templates/blog/latest/homepage-light-mobile.jpg) |
+| Dark | ![homepage dark desktop](https://raw.githubusercontent.com/emdash-cms/emdash/main/assets/templates/blog/latest/homepage-dark-desktop.jpg) | ![homepage dark mobile](https://raw.githubusercontent.com/emdash-cms/emdash/main/assets/templates/blog/latest/homepage-dark-mobile.jpg) |
+
+## Infrastructure
+
+- **Runtime:** Node.js
+- **Database:** SQLite (local file)
+- **Storage:** Local filesystem
+- **Framework:** Astro with `@astrojs/node`
+
+## Getting Started
 
 ```bash
-wp plugin install https://github.com/aiiddqd/process-flows/archive/main.zip --activate
+pnpm install
+pnpm bootstrap
+pnpm dev
 ```
 
-This command downloads and activates the plugin directly from the GitHub repository.
+Open http://localhost:4321 for the site and http://localhost:4321/_emdash/admin for the CMS.
 
+## Want Cloudflare Instead?
 
+See the [Cloudflare variant](../blog-cloudflare) for a version that deploys to Cloudflare Workers with D1 and R2.
 
-## from web console
-- Download the Process Flows plugin from the WordPress Plugin Repository or upload the plugin zip file.
-- Navigate to Plugins > Add New in your WordPress admin dashboard.
-- Upload and activate the plugin.
-- Configure the plugin settings from the Process Flows menu in the admin panel.
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/emdash-cms/templates/tree/main/blog-cloudflare)
 
-# Usage
+## See Also
 
-## Create a Workflow:
-
-Go to the Process Flows dashboard.
-Click "Add New Workflow" and use the drag-and-drop interface to design your process.
-Define triggers, actions, and conditions.
-
-
-## Configure AI Agents:
-
-Enable AI agents in the plugin settings.
-Assign tasks such as content generation, data analysis, or decision-making to AI agents.
-
-
-## Monitor and Optimize:
-
-View real-time analytics to track workflow performance.
-Adjust workflows based on insights to improve efficiency.
-
-
-
-# Requirements
-
-WordPress 5.8 or higher
-PHP 7.4 or higher
-MySQL 5.7 or higher
-Optional: API keys for external integrations (e.g., CRM, email services)
-
-# Support
-For issues, feature requests, or general inquiries, visit our Support Page or contact us at support@example.com.
-
-# Contributing
-We welcome contributions! Please fork the repository on GitHub and submit a pull request with your changes.
-
-# License
-Process Flows is licensed under the GPLv2 or later.
+- [All templates](../)
+- [EmDash documentation](https://github.com/emdash-cms/emdash/tree/main/docs)
