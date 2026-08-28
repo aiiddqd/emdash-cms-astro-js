@@ -111,3 +111,10 @@ emdash({
 ## Итого и рекомендации
 
 Строка `MCP server http://localhost:4321/_emdash/api/mcp` — ожидаемый вывод EmDash 0.35.0: встроенный, аутентифицированный API-интерфейс для AI-клиентов. Для данного репозитория базовая политика — отделить его от Docs MCP, ограничивать доступ scopes и не выпускать production credentials до определения владельца и public origin.
+
+## Источники
+
+- [EmDash AI Tools](https://docs.emdashcms.com/guides/ai-tools/)
+- [EmDash MCP Server Reference](https://docs.emdashcms.com/reference/mcp-server/)
+- [EmDash Configuration Reference (`siteUrl`)](https://docs.emdashcms.com/reference/configuration/)
+- [EmDash Docs MCP](https://docs.emdashcms.com/docs-mcp/)
