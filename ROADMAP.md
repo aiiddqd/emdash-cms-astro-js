@@ -9,4 +9,7 @@
     Skips passkey setup/auth and signs you in as a dev admin
 
 
+- [ ] forms and emails - [rfc](docs/rfc/store-leads-and-send-emails.md)
+
+
 - [ ] add MCP [RFC](docs/rfc/mcp.md)
